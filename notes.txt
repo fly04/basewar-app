@@ -1,0 +1,7 @@
+Todo pour la prochaine fois : 
+- Continuer à partir de https://github.com/MediaComem/comem-travel-log-ionic-setup#configuring-an-http-interceptor
+- Configurer le service users pour faire les appels à l'API
+
+Todo pour le header avec la thune : 
+- Créer un composant "app-header" qui appelle un service qui va chercher les infos et l'injecter dans toutes les pages qui le requiert
+- voir https://angular.io/guide/content-projection pour la customisation par page
