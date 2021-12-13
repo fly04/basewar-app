@@ -1,0 +1,7 @@
+{
+  "name": "basewar",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
