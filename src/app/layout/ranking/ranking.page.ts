@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { UsersService } from 'src/app/api/users.service';
+import { ViewDidEnter } from '@ionic/angular';
+import { User } from 'src/app/models/user';
 
 @Component({
   selector: 'app-ranking',
@@ -6,10 +9,16 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./ranking.page.scss'],
 })
 export class RankingPage implements OnInit {
+  usersToDisplay: User[];
+  testToDisplay: string[] = ['test1', 'test2', 'test3'];
 
-  constructor() { }
+  constructor(private usersService: UsersService) {}
 
-  ngOnInit() {
+  ngOnInit() {}
+
+  ionViewDidEnter() {
+    this.usersService.getUsers().subscribe((users) => {
+      this.usersToDisplay = users;
+    });
   }
-
 }

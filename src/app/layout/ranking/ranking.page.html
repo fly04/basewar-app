@@ -3,4 +3,16 @@
     <ion-title>Classement</ion-title>
   </ion-toolbar>
 </ion-header>
-<ion-content> </ion-content>
+
+<ion-content>
+  <ion-list>
+    <ion-item *ngFor="let user of usersToDisplay; let i = index">
+      <ion-icon slot="start" icon="happy"></ion-icon>
+      <ion-label>#{{i+1}} {{user.name}}</ion-label>
+      <ion-label slot="end">
+        {{user.money}}
+        <ion-icon icon="diamond"></ion-icon>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>
