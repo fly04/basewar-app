@@ -8,10 +8,55 @@
 </app-header>
 
 <ion-content>
+  <!-- Barre de recherche -->
+  <ion-searchbar
+    placeholder="Rechercher un utilisateur..."
+    [(ngModel)]="searchTerm"
+    animated="true"
+  ></ion-searchbar>
+
+  <!-- Filtres -->
+  <ion-toolbar>
+    <ion-item>
+      <!-- Filtre par nom -->
+      <ion-label
+        (click)="sortType = 'name'; sortReverse = !sortReverse"
+        style="margin-left: 4rem"
+        >Nom
+
+        <!-- Flèche vers le bas -->
+        <span *ngIf="sortType == 'name' && sortReverse == true">
+          <ion-icon name="chevron-down-outline"></ion-icon>
+        </span>
+        <!-- Flèche vers le haut -->
+        <span *ngIf="sortType == 'name' && sortReverse == false">
+          <ion-icon name="chevron-up-outline"></ion-icon></span
+      ></ion-label>
+
+      <!-- Filtre par argent -->
+      <ion-label
+        (click)="sortType = 'rank'; sortReverse = !sortReverse"
+        slot="end"
+        >Argent
+        <!-- Flèche vers le bas -->
+        <span *ngIf="sortType == 'rank' && sortReverse == true">
+          <ion-icon name="chevron-down-outline"></ion-icon>
+        </span>
+        <!-- Flèche vers le haut -->
+        <span *ngIf="sortType == 'rank' && sortReverse == false">
+          <ion-icon name="chevron-up-outline"></ion-icon>
+        </span>
+      </ion-label>
+    </ion-item>
+  </ion-toolbar>
+
+  <!-- Liste d'utilisateurs -->
   <ion-list>
-    <ion-item *ngFor="let user of usersToDisplay; let i = index">
+    <ion-item
+      *ngFor="let user of usersToDisplay | filter:searchTerm | orderBy:sortType:sortReverse "
+    >
       <ion-icon slot="start" icon="happy"></ion-icon>
-      <ion-label>#{{i+1}} {{user.name}}</ion-label>
+      <ion-label>#{{user.rank}} {{user.name}}</ion-label>
       <ion-label slot="end">
         {{user.money}}
         <ion-icon icon="diamond"></ion-icon>
