@@ -6,6 +6,8 @@ import { IonicModule } from '@ionic/angular';
 
 import { RankingPageRoutingModule } from './ranking-routing.module';
 import { LayoutComponentsModule } from '../components/layout-components/layout-components.module';
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import { OrderModule } from 'ngx-order-pipe';
 
 import { RankingPage } from './ranking.page';
 
@@ -16,6 +18,8 @@ import { RankingPage } from './ranking.page';
     IonicModule,
     RankingPageRoutingModule,
     LayoutComponentsModule,
+    Ng2SearchPipeModule,
+    OrderModule,
   ],
   declarations: [RankingPage],
 })
