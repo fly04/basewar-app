@@ -1,7 +1,14 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Profil</ion-title>
+<app-header>
+  <ion-title title>
+    <a href="">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </a>
+    Mon profil
+  </ion-title>
+</app-header>
 
+<ion-content>
+  <ion-toolbar>
     <!-- Logout button -->
     <ion-buttons slot="end">
       <ion-button (click)="logOut()">
@@ -9,4 +16,4 @@
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
-</ion-header>
+</ion-content>

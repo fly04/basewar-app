@@ -1,3 +1,7 @@
 Todo pour le header avec la thune :
 - Créer un composant "app-header" qui appelle un service qui va chercher les infos et l'injecter dans toutes les pages qui le requiert
 - voir https://angular.io/guide/content-projection pour la customisation par page
+
+Todo pour la prochaine fois :
+- Demander quoi comment pour le error handler (https://angular.io/tutorial/toh-pt6#get-hero-by-id)
+

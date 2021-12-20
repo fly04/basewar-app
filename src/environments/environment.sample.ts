@@ -2,4 +2,5 @@
 export const environment = {
   production: false,
   apiUrl: 'https://example.com/api',
+  wsUrl: 'ws://example.com/api/',
 };
