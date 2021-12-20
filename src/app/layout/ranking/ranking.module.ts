@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
 import { RankingPageRoutingModule } from './ranking-routing.module';
+import { LayoutComponentsModule } from '../components/layout-components/layout-components.module';
 
 import { RankingPage } from './ranking.page';
 
@@ -13,8 +14,9 @@ import { RankingPage } from './ranking.page';
     CommonModule,
     FormsModule,
     IonicModule,
-    RankingPageRoutingModule
+    RankingPageRoutingModule,
+    LayoutComponentsModule,
   ],
-  declarations: [RankingPage]
+  declarations: [RankingPage],
 })
 export class RankingPageModule {}
