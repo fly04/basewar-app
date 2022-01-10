@@ -13,7 +13,6 @@ const URL = `${environment.apiUrl}/users`;
 })
 export class UsersService {
   userStat: { income: string; money: string };
-  activeBases: any;
 
   constructor(public http: HttpClient, public wsService: WebsocketService) {
     this.wsService
@@ -28,6 +27,10 @@ export class UsersService {
           money: data.money,
         };
       });
+
+    setInterval(() => {
+      console.log(this.userStat);
+    }, 1000);
   }
 
   getUsers(): Observable<User[]> {
@@ -48,7 +51,7 @@ export class UsersService {
       userId: '619377f6806e604c76aa3bb6',
       location: {
         type: 'Point',
-        coordinates: [46.781171, 6.646842],
+        coordinates: [46.779917, 6.637648],
       },
     });
     console.log('sent!');

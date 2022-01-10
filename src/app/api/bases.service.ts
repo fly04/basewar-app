@@ -12,16 +12,15 @@ const URL = `${environment.apiUrl}/bases`;
   providedIn: 'root',
 })
 export class BasesService {
-  constructor(public http: HttpClient, public wsService: WebsocketService) {
-    this.wsService
-      .listen()
-      .pipe(
-        filter((message) => message.command === 'updateBases'),
-        map((message) => message.params)
-      )
-      .subscribe((data) => {
-        console.log(data);
-      });
+  activeBases: any[];
+
+  constructor(public http: HttpClient, public wsService: WebsocketService) {}
+
+  getActiveBases(): Observable<any> {
+    return this.wsService.listen().pipe(
+      filter((message) => message.command === 'updateBases'),
+      map((message) => message.params)
+    );
   }
 
   getBases(): Observable<Base[]> {
