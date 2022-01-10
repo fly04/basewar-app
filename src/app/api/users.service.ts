@@ -26,6 +26,7 @@ export class UsersService {
           income: data.income,
           money: data.money,
         };
+        console.log(data);
       });
   }
 

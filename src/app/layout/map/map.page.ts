@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { BasesService } from '../../../app/api/bases.service';
 
 @Component({
   selector: 'app-map',
@@ -6,10 +7,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./map.page.scss'],
 })
 export class MapPage implements OnInit {
+  constructor(readonly basesService: BasesService) {}
 
-  constructor() { }
-
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }
