@@ -10,3 +10,13 @@
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
+
+<ion-content>
+  <div *ngIf="actualUser">
+    <h2>User</h2>
+    {{ actualUser.name }}
+  </div>
+
+  <h2>Bases</h2>
+  <div *ngFor="let base of bases">{{ base.name }}</div>
+</ion-content>
