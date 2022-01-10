@@ -2,4 +2,11 @@
   <ion-title title>Carte</ion-title>
 </app-header>
 
-<ion-content> </ion-content>
+<ion-content>
+  <div
+    class="map"
+    leaflet
+    [leafletOptions]="mapOptions"
+    (leafletMapReady)="onMapReady($event)"
+  ></div>
+</ion-content>

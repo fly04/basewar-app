@@ -1,13 +1,28 @@
 import { Component, OnInit } from '@angular/core';
-import { BasesService } from '../../../app/api/bases.service';
+import { latLng, MapOptions, tileLayer } from 'leaflet';
+import { Map } from 'leaflet';
 
 @Component({
   selector: 'app-map',
   templateUrl: './map.page.html',
   styleUrls: ['./map.page.scss'],
 })
-export class MapPage implements OnInit {
-  constructor(readonly basesService: BasesService) {}
+export class MapPage {
+  mapOptions: MapOptions;
 
-  ngOnInit() {}
+  constructor() {
+    this.mapOptions = {
+      layers: [
+        tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 18,
+        }),
+      ],
+      zoom: 13,
+      center: latLng(46.778186, 6.641524),
+    };
+  }
+
+  onMapReady(map: Map) {
+    setTimeout(() => map.invalidateSize(), 0);
+  }
 }

@@ -1,6 +1,7 @@
-Todo pour le header avec la thune :
-- Créer un composant "app-header" qui appelle un service qui va chercher les infos et l'injecter dans toutes les pages qui le requiert
-- voir https://angular.io/guide/content-projection pour la customisation par page
+Todo pour la carte : 
+- Envoyer toutes les bases actives avec leurs coords depuis le back
+- Continuer à partir de là (https://mediacomem.github.io/comem-devmobil/latest/subjects/angular-leaflet/#8)
+
 
 Todo pour la prochaine fois :
 - Demander quoi comment pour le error handler (https://angular.io/tutorial/toh-pt6#get-hero-by-id)
