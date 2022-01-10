@@ -27,21 +27,6 @@ export class UsersService {
           income: data.income,
           money: data.money,
         };
-        console.log(data);
-      });
-
-    this.wsService
-      .listen()
-      .pipe(
-        filter((message) => message.command === 'updateBases'),
-        map((message) => message.params)
-      )
-      .subscribe((data) => {
-        console.log(data);
-        this.userStat = {
-          income: data.income,
-          money: data.money,
-        };
       });
   }
 
