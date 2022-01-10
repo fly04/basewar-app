@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LayoutComponentsModule } from '../components/layout-components/layout-components.module';
+import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 
 import { IonicModule } from '@ionic/angular';
 
@@ -16,6 +17,7 @@ import { MapPage } from './map.page';
     IonicModule,
     MapPageRoutingModule,
     LayoutComponentsModule,
+    LeafletModule,
   ],
   declarations: [MapPage],
 })
