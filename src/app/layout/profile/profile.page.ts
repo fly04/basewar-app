@@ -4,6 +4,8 @@ import { AuthService } from 'src/app/auth/auth.service';
 import { User } from 'src/app/models/user';
 import { Base } from 'src/app/models/base';
 import { BasesService } from 'src/app/api/bases.service';
+import { UsersService } from 'src/app/api/users.service';
+import { ThrowStmt } from '@angular/compiler';
 
 @Component({
   selector: 'app-profile',
@@ -13,16 +15,33 @@ import { BasesService } from 'src/app/api/bases.service';
 export class ProfilePage implements OnInit {
   actualUser: User;
   bases: Base[];
+  editionMode: boolean;
 
   constructor(
     // Inject the authentication provider.
     private auth: AuthService,
     private basesService: BasesService,
+    private usersService: UsersService,
     // Inject the router
     private router: Router
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.auth.getUser$().subscribe((user) => {
+      this.actualUser = user;
+    });
+    this.editionMode = false;
+  }
+
+  updateUserName(user: User) {
+    this.editionMode = false;
+    this.actualUser = user;
+    this.usersService
+      .patchUserName(user.id, user.name)
+      .subscribe((userToUpdate) => {
+        this.auth.updateAuth(userToUpdate);
+      });
+  }
 
   // Add a method to log out.
   logOut() {
@@ -32,9 +51,6 @@ export class ProfilePage implements OnInit {
   }
 
   ionViewDidEnter() {
-    this.auth.getUser$().subscribe((user) => {
-      this.actualUser = user;
-    });
     this.basesService.getUserBases(this.actualUser).subscribe((bases) => {
       this.bases = bases;
     });

@@ -20,8 +20,22 @@
   </ion-header>
 
   <div *ngIf="actualUser">
-    <h2>User</h2>
-    {{ actualUser.name }}
+    <form (submit)="updateUserName(actualUser, actualUser.name)">
+      <ion-input
+        type="text"
+        placeholder="{{ actualUser.name }}"
+        [(ngModel)]="actualUser.name"
+        name="actualUser.name"
+        required
+        disabled="{{ !editionMode }}"
+      ></ion-input>
+      <div class="edit">
+        <ion-button *ngIf="!editionMode" (click)="editionMode = true">
+          Edit
+        </ion-button>
+        <ion-button type="submit" *ngIf="editionMode">Confirm</ion-button>
+      </div>
+    </form>
   </div>
 
   <h2>Bases</h2>

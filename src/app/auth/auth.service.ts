@@ -50,6 +50,14 @@ export class AuthService {
     );
   }
 
+  updateAuth(user: User) {
+    return this.#auth$.subscribe((auth) => {
+      auth.user = user;
+      this.saveAuth$(auth);
+      // this.#auth$.next(auth); <-- too much recursion
+    });
+  }
+
   logOut(): void {
     this.#auth$.next(null);
     console.log('User logged out');

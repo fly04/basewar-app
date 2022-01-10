@@ -25,18 +25,19 @@ export class WebsocketService {
     // Only listen when the connection is opened
     return this.ws$.pipe(
       // Make an observable out of the websocket stream
-      switchMap((socket) => {
-        return new Observable((subscriber: Observer<MessageEvent>) => {
-          // When a new message is received, the Observable will emit this message
-          socket.onmessage = (message) => subscriber.next(message);
-          // When a websocket error occurs, the Observable will emit a new error
-          socket.onerror = (error) => subscriber.error(error);
-          // When the websocket closes, the observable completes
-          socket.onclose = () => subscriber.complete();
-          // Function that will be called if the user manually unsubscribe
-          return () => socket.close();
-        });
-      }),
+      switchMap(
+        (socket) =>
+          new Observable((subscriber: Observer<MessageEvent>) => {
+            // When a new message is received, the Observable will emit this message
+            socket.onmessage = (message) => subscriber.next(message);
+            // When a websocket error occurs, the Observable will emit a new error
+            socket.onerror = (error) => subscriber.error(error);
+            // When the websocket closes, the observable completes
+            socket.onclose = () => subscriber.complete();
+            // Function that will be called if the user manually unsubscribe
+            return () => socket.close();
+          })
+      ),
       // When a message is emitted, change the value to the message content
       map((event: MessageEvent) => JSON.parse(event.data))
     );

@@ -35,17 +35,31 @@ export class UsersService {
     //ERROR HANDLER A IMPLEMENTER
   }
 
-  getUser(id: number): Observable<User> {
+  getUser(id: string): Observable<User> {
     const url = `${URL}/${id}`;
     return this.http.get<User>(url);
     //ERROR HANDLER A IMPLEMENTER
+  }
+
+  postUser(user: User): Observable<User> {
+    const url = `${URL}/${user.id}`;
+    return this.http.post<User>(url, user);
+    //ERROR HANDLER A IMPLEMENTER
+    // .pipe(catchError(this.handleError('postUser', user)));
+  }
+
+  patchUserName(id: string, newUserName: string): Observable<any> {
+    const url = `${URL}/${id}`;
+    return this.http.patch(url, { name: newUserName });
+    // ERROR HANDLER A IMPLEMENTER
+    // .pipe(catchError(this.handleError('patchUserName')));
   }
 
   //TEMPORAIRE (juste là pour les tests, à changer lorsqu'on aura implémenté la GeoLoc)
   sendMessage() {
     this.wsService.send({
       command: 'updateLocation',
-      userId: '619377f6806e604c76aa3bb6',
+      userId: '619416ab66443fe3f139851c',
       location: {
         type: 'Point',
         coordinates: [46.781171, 6.646842],
