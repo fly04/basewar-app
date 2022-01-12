@@ -16,12 +16,12 @@ export class BasesService {
 
   constructor(public http: HttpClient, public wsService: WebsocketService) {}
 
-  getActiveBases(): Observable<any> {
-    return this.wsService.listen().pipe(
-      filter((message) => message.command === 'updateBases'),
-      map((message) => message.params)
-    );
-  }
+  //   getActiveBases(): Observable<any> {
+  //     return this.wsService.listen().pipe(
+  //       filter((message) => message.command === 'updateBases'),
+  //       map((message) => message.params)
+  //     );
+  //   }
 
   getBases(): Observable<Base[]> {
     return this.http.get<Base[]>(URL);

@@ -3,10 +3,10 @@
     <ng-content select="[title]"></ng-content>
     <ion-label slot="end">
       Money:
-      {{ usersService.userStat?.money }}
+      {{ this.userStats?.money }}
       <br />
       Income:
-      {{ usersService.userStat?.income }}
+      {{ this.userStats?.income }}
     </ion-label>
   </ion-toolbar>
 </ion-header>

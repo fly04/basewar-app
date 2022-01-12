@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../../auth/auth.service';
-import { UsersService } from '../../../api/users.service';
+import { WsMessagesService } from '../../../api/ws-messages.service';
 import { ViewWillEnter } from '@ionic/angular';
 
 @Component({
@@ -8,13 +8,20 @@ import { ViewWillEnter } from '@ionic/angular';
   templateUrl: './app-header.component.html',
   styleUrls: ['./app-header.component.scss'],
 })
-export class AppHeaderComponent implements OnInit {
-  money: string;
-  income: string;
+export class AppHeaderComponent {
+  //   money: string;
+  //   income: string;
+  userStats: { income: string; money: string };
 
-  constructor(private auth: AuthService, readonly usersService: UsersService) {}
-
-  ngOnInit(): void {
-    this.usersService.sendMessage();
+  constructor(
+    private auth: AuthService,
+    readonly wsMessagesService: WsMessagesService
+  ) {
+    wsMessagesService.updateUser$.subscribe((userStats) => {
+      this.userStats = {
+        money: userStats.money,
+        income: userStats.income,
+      };
+    });
   }
 }

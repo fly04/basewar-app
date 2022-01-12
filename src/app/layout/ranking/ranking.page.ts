@@ -34,7 +34,6 @@ export class RankingPage implements OnInit {
           money: user.money,
         };
       });
-      console.log(this.usersToDisplay);
     });
   }
 }

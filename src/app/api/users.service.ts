@@ -12,26 +12,7 @@ const URL = `${environment.apiUrl}/users`;
   providedIn: 'root',
 })
 export class UsersService {
-  userStat: { income: string; money: string };
-
-  constructor(public http: HttpClient, public wsService: WebsocketService) {
-    this.wsService
-      .listen()
-      .pipe(
-        filter((message) => message.command === 'updateUser'),
-        map((message) => message.params)
-      )
-      .subscribe((data) => {
-        this.userStat = {
-          income: data.income,
-          money: data.money,
-        };
-      });
-
-    setInterval(() => {
-      console.log(this.userStat);
-    }, 1000);
-  }
+  constructor(public http: HttpClient) {}
 
   getUsers(): Observable<User[]> {
     return this.http.get<User[]>(URL);
@@ -42,18 +23,5 @@ export class UsersService {
     const url = `${URL}/${id}`;
     return this.http.get<User>(url);
     //ERROR HANDLER A IMPLEMENTER
-  }
-
-  //TEMPORAIRE (juste là pour les tests, à changer lorsqu'on aura implémenté la GeoLoc)
-  sendMessage() {
-    this.wsService.send({
-      command: 'updateLocation',
-      userId: '619377f6806e604c76aa3bb6',
-      location: {
-        type: 'Point',
-        coordinates: [46.779917, 6.637648],
-      },
-    });
-    console.log('sent!');
   }
 }
