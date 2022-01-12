@@ -15,10 +15,12 @@ import { environment } from 'src/environments/environment';
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   #auth$: ReplaySubject<AuthResponse | undefined>;
+  #auth: AuthResponse | undefined;
 
   constructor(private http: HttpClient, private storage: Storage) {
     this.#auth$ = new ReplaySubject(1);
     this.storage.get('auth').then((auth) => {
+      this.#auth = auth;
       // Emit the loaded value into the observable stream.
       this.#auth$.next(auth);
     });
@@ -43,6 +45,7 @@ export class AuthService {
       delayWhen((auth) => this.saveAuth$(auth)),
 
       map((auth) => {
+        this.#auth = auth;
         this.#auth$.next(auth);
         console.log(`User ${auth.user.name} logged in`);
         return auth.user;
@@ -51,15 +54,14 @@ export class AuthService {
   }
 
   updateAuth(user: User) {
-    return this.#auth$.subscribe((auth) => {
-      auth.user = user;
-      this.saveAuth$(auth);
-      // this.#auth$.next(auth); <-- too much recursion
-    });
+      this.#auth.user = user;
+      this.saveAuth$(this.#auth);
+      this.#auth$.next(this.#auth);
   }
 
   logOut(): void {
     this.#auth$.next(null);
+    this.#auth = undefined;
     console.log('User logged out');
   }
 
