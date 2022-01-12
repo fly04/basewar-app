@@ -19,9 +19,23 @@ export class UsersService {
     //ERROR HANDLER A IMPLEMENTER
   }
 
-  getUser(id: number): Observable<User> {
+  getUser(id: string): Observable<User> {
     const url = `${URL}/${id}`;
     return this.http.get<User>(url);
     //ERROR HANDLER A IMPLEMENTER
+  }
+
+  postUser(user: User): Observable<User> {
+    const url = `${URL}/${user.id}`;
+    return this.http.post<User>(url, user);
+    //ERROR HANDLER A IMPLEMENTER
+    // .pipe(catchError(this.handleError('postUser', user)));
+  }
+
+  patchUserName(id: string, newUserName: string): Observable<any> {
+    const url = `${URL}/${id}`;
+    return this.http.patch(url, { name: newUserName });
+    // ERROR HANDLER A IMPLEMENTER
+    // .pipe(catchError(this.handleError('patchUserName')));
   }
 }
