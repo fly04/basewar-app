@@ -3,8 +3,8 @@ import { Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/auth.service';
 import { User } from 'src/app/models/user';
 import { Base } from 'src/app/models/base';
-import { BasesService } from 'src/app/api/bases.service';
-import { UsersService } from 'src/app/api/users.service';
+import { BasesService } from 'src/app/services/api/bases.service';
+import { UsersService } from 'src/app/services/api/users.service';
 import { ThrowStmt } from '@angular/compiler';
 
 @Component({

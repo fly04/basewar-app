@@ -54,9 +54,9 @@ export class AuthService {
   }
 
   updateAuth(user: User) {
-      this.#auth.user = user;
-      this.saveAuth$(this.#auth);
-      this.#auth$.next(this.#auth);
+    this.#auth.user = user;
+    this.saveAuth$(this.#auth);
+    this.#auth$.next(this.#auth);
   }
 
   logOut(): void {

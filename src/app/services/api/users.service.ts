@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { User } from '../models/user';
+import { User } from 'src/app/models/user';
 import { environment } from 'src/environments/environment';
-import { WebsocketService } from './websocket.service';
 import { filter, map, catchError } from 'rxjs/operators';
 
 const URL = `${environment.apiUrl}/users`;

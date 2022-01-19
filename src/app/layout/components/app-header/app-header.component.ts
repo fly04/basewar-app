@@ -1,7 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { AuthService } from '../../../auth/auth.service';
-import { WsMessagesService } from '../../../api/ws-messages.service';
-import { ViewWillEnter } from '@ionic/angular';
+import { WsMessagesService } from '../../../services/websocket/ws-messages.service';
 
 @Component({
   selector: 'app-header',
@@ -9,14 +8,20 @@ import { ViewWillEnter } from '@ionic/angular';
   styleUrls: ['./app-header.component.scss'],
 })
 export class AppHeaderComponent {
-  //   money: string;
-  //   income: string;
   userStats: { income: string; money: string };
 
   constructor(
     private auth: AuthService,
     readonly wsMessagesService: WsMessagesService
   ) {
+    this.userStats = { income: '0', money: '0' };
+
+    this.auth.getUser$().subscribe((user) => {
+      if (this.userStats.money !== '0') return;
+      let lastSeenMoney = user.money;
+      this.userStats.money = lastSeenMoney;
+    });
+
     wsMessagesService.updateUser$.subscribe((userStats) => {
       this.userStats = {
         money: userStats.money,

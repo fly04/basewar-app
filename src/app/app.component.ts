@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
+import { GeolocationService } from './services/geolocation.service';
+import { AuthService } from './auth/auth.service';
+import { WebsocketService } from './services/websocket/websocket.service';
 
 @Component({
   selector: 'app-root',
@@ -7,7 +10,33 @@ import { Storage } from '@ionic/storage-angular';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
-  constructor(storage: Storage) {
+  currentPosition: {
+    lat: number;
+    lng: number;
+  };
+  constructor(
+    storage: Storage,
+    readonly geolocService: GeolocationService,
+    websocketService: WebsocketService
+  ) {
     storage.create();
+
+    setInterval(() => {
+      geolocService.getCurrentPosition().then((position) => {
+        storage.get('auth').then((data) => {
+          let lng = position.coords.longitude;
+          let lat = position.coords.latitude;
+          let wsMessage = {
+            command: 'updateLocation',
+            userId: data.user.id,
+            location: {
+              type: 'Point',
+              coordinates: [lat, lng],
+            },
+          };
+          websocketService.send(wsMessage);
+        });
+      });
+    }, 5000);
   }
 }
