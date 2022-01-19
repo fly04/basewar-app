@@ -1,6 +1,10 @@
-Todo pour la carte : 
-- Envoyer toutes les bases actives avec leurs coords depuis le back
-- Continuer à partir de là (https://mediacomem.github.io/comem-devmobil/latest/subjects/angular-leaflet/#8)
+Todo pour la carte :
+- Vérifier les bugs (6x dans activeUsers, pas de updateUser reçu)
+- implémenter notifications
+
+- DEMANDER NOTIFICATIONS
+- DEMANDER ERROR HANDLER
+- demander problème de carte dans le coin supérieur gauche malgré le fix
 
 
 Todo pour la prochaine fois :

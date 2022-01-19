@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UsersService } from 'src/app/api/users.service';
+import { UsersService } from 'src/app/services/api/users.service';
 import { ViewDidEnter } from '@ionic/angular';
 import { UserRank } from 'src/app/models/user-rank';
 import { OrderPipe } from 'ngx-order-pipe';

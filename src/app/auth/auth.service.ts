@@ -54,7 +54,6 @@ export class AuthService {
     return this.#auth$.subscribe((auth) => {
       auth.user = user;
       this.saveAuth$(auth);
-      // this.#auth$.next(auth); <-- too much recursion
     });
   }
 

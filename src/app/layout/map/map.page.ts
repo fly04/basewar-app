@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { defaultIcon } from './markers/default-marker';
 import { usedIcon } from './markers/used-marker';
+import { userIcon } from './markers/user-marker';
 import { latLng, MapOptions, tileLayer } from 'leaflet';
-import { Map, marker, Marker } from 'leaflet';
-import { BasesService } from 'src/app/api/bases.service';
-import { WsMessagesService } from 'src/app/api/ws-messages.service';
+import { Map, marker, Marker, circle, Circle } from 'leaflet';
+import { BasesService } from 'src/app/services/api/bases.service';
+import { WsMessagesService } from 'src/app/services/websocket/ws-messages.service';
+import { GeolocationService } from 'src/app/services/geolocation.service';
 
 @Component({
   selector: 'app-map',
@@ -13,14 +15,17 @@ import { WsMessagesService } from 'src/app/api/ws-messages.service';
 })
 export class MapPage {
   mapOptions: MapOptions;
-  mapMarkers: Marker[];
+  basesMarkers: Marker[]; //Contient les markers à afficher sur la carte où se trouvent les bases
+  basesCircles: Circle[]; //Contient les cercles à afficher sur la carte autour des bases
+  markers: any[]; //Contient à terme tous les markers
   basesToDisplay: any;
-  refreshBases;
 
   constructor(
     readonly basesService: BasesService,
-    readonly wsMessagesService: WsMessagesService
+    readonly wsMessagesService: WsMessagesService,
+    readonly geolocService: GeolocationService
   ) {
+    //Set les options de la carte
     this.mapOptions = {
       layers: [
         tileLayer(
@@ -31,15 +36,70 @@ export class MapPage {
         ),
       ],
       zoom: 13,
-      center: latLng(46.778186, 6.641524),
+      center: latLng(0, 0),
     };
+
+    this.basesMarkers = [];
+    this.basesCircles = [];
   }
 
   onMapReady(map: Map) {
     setTimeout(() => map.invalidateSize(), 0);
+
+    //Place la caméra à la position initiale du joueur lorsqu'il ouvre l'app
+    this.geolocService.getCurrentPosition().then((position) => {
+      map.setView(
+        latLng(position.coords.latitude, position.coords.longitude),
+        16
+      );
+    });
+
+    //Chaque seconde la position du userMarker est actualisée
+    setInterval(() => {
+      this.geolocService.getCurrentPosition().then((position) => {
+        let lat = position.coords.latitude;
+        let lng = position.coords.longitude;
+
+        let userMarker = marker([lat, lng], {
+          icon: userIcon,
+        });
+
+        this.markers = [userMarker, ...this.basesMarkers, ...this.basesCircles];
+      });
+    }, 1000);
+  }
+
+  addMarker(isActive: boolean, base, userCount = 0) {
+    let icon = defaultIcon;
+    let tooltip = base.name;
+    let color = 'blue';
+    let fillColor = '#3d85c6';
+
+    if (isActive) {
+      icon = usedIcon;
+      tooltip += '<br> Nombre de joueurs actifs: ' + userCount;
+      color = 'red';
+      fillColor = '#f03';
+    }
+
+    this.basesMarkers.push(
+      marker([base.location.coordinates[0], base.location.coordinates[1]], {
+        icon: icon,
+      }).bindTooltip(tooltip)
+    );
+
+    this.basesCircles.push(
+      circle([base.location.coordinates[0], base.location.coordinates[1]], {
+        fillColor: fillColor,
+        fillOpacity: 0.5,
+        radius: 200,
+        stroke: false,
+      })
+    );
   }
 
   ionViewDidEnter() {
+    //Récupère toutes les bases de la bdd via l'API
     this.basesService.getBases().subscribe((bases) => {
       this.basesToDisplay = bases.map((base) => {
         return {
@@ -51,8 +111,10 @@ export class MapPage {
         };
       });
 
+      //Récupère toutes les bases actives via WS
       this.wsMessagesService.updateBases$.subscribe((activeBases) => {
-        let markers = [];
+        this.basesMarkers = [];
+        this.basesCircles = [];
         this.basesToDisplay.forEach((base) => {
           let isActive = false;
           let userCount;
@@ -62,71 +124,10 @@ export class MapPage {
               userCount = activeBase.activeUsers.length;
             }
           });
-
-          if (isActive) {
-            markers.push(
-              marker(
-                [base.location.coordinates[0], base.location.coordinates[1]],
-                {
-                  icon: usedIcon,
-                }
-              ).bindTooltip(
-                base.name + '<br> Nombre de joueurs actifs: ' + userCount
-              )
-            );
-          } else {
-            markers.push(
-              marker(
-                [base.location.coordinates[0], base.location.coordinates[1]],
-                {
-                  icon: defaultIcon,
-                }
-              ).bindTooltip(base.name)
-            );
-          }
+          //Ajoute des markers pour chaque base, spécifiant si elle est active ou non
+          this.addMarker(isActive, base, userCount);
         });
-
-        this.mapMarkers = markers;
       });
-
-      //   setInterval(() => {
-      //     console.log(this.wsMessagesService.activeBases);
-      //   }, 1000);
-
-      //   let refreshBases = setInterval(() => {
-      //     let markers = [];
-      //     this.basesToDisplay.forEach((base) => {
-      //       let isActive = false;
-      //       this.wsMessagesService.activeBases?.forEach((activeBase) => {
-      //         if (base.id === activeBase.id) {
-      //           isActive = true;
-      //         }
-      //       });
-
-      //       if (isActive) {
-      //         markers.push(
-      //           marker(
-      //             [base.location.coordinates[0], base.location.coordinates[1]],
-      //             {
-      //               icon: usedIcon,
-      //             }
-      //           ).bindTooltip(base.name)
-      //         );
-      //       } else {
-      //         markers.push(
-      //           marker(
-      //             [base.location.coordinates[0], base.location.coordinates[1]],
-      //             {
-      //               icon: defaultIcon,
-      //             }
-      //           ).bindTooltip(base.name)
-      //         );
-      //       }
-      //     });
-
-      //     this.mapMarkers = markers;
-      //     console.log('aa');
-      //   }, 1000);
     });
   }
 }
