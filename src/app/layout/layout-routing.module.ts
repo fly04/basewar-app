@@ -24,11 +24,21 @@ const routes: Routes = [
           import('./profile/profile.module').then((m) => m.ProfilePageModule),
       },
       {
+        path: 'base',
+        loadChildren: () =>
+          import('./base/base.module').then((m) => m.BasePageModule),
+      },
+      {
         path: '',
         redirectTo: 'map',
         pathMatch: 'full',
       },
     ],
+  },
+  {
+    path: 'base',
+    loadChildren: () =>
+      import('./base/base.module').then((m) => m.BasePageModule),
   },
 ];
 

@@ -20,7 +20,7 @@
   </ion-header>
 
   <div *ngIf="actualUser">
-    <form (submit)="updateUserName(actualUser, actualUser.name)">
+    <form (submit)="updateUserName(actualUser)">
       <ion-input
         type="text"
         placeholder="{{ actualUser.name }}"
@@ -39,5 +39,7 @@
   </div>
 
   <h2>Bases</h2>
-  <div *ngFor="let base of bases">{{ base.name }}</div>
+  <div *ngFor="let base of bases">
+    <a [routerLink]="['/base', base.id]">{{ base.name }}</a>
+  </div>
 </ion-content>
