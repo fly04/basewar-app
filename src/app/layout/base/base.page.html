@@ -1,0 +1,35 @@
+<app-header>
+  <ion-title title>
+    <a href="">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </a>
+  </ion-title>
+</app-header>
+
+<ion-content>
+  <div *ngIf="actualBase">
+    <form (submit)="updateBaseName(actualBase)">
+      <ion-input
+        type="text"
+        placeholder="{{ actualBase.name }}"
+        [(ngModel)]="actualBase.name"
+        name="actualBase.name"
+        required
+        disabled="{{ !editionMode }}"
+      ></ion-input>
+      <div class="edit">
+        <ion-button *ngIf="!editionMode" (click)="editionMode = true">
+          Edit
+        </ion-button>
+        <ion-button type="submit" *ngIf="editionMode">Confirm</ion-button>
+      </div>
+    </form>
+  </div>
+
+  <div *ngIf="investments">
+    <h2>Investisseurs</h2>
+    <div *ngFor="let investment of investments">
+      {{ investment.investor.name }}
+    </div>
+  </div>
+</ion-content>
