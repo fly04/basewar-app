@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Base } from 'src/app/models/base';
-import { BasesService } from 'src/app/api/bases.service';
+import { BasesService } from 'src/app/services/api/bases.service';
 import { AuthService } from 'src/app/auth/auth.service';
 import { Investment } from 'src/app/models/investment';
 
