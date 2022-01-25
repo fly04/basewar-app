@@ -13,9 +13,7 @@ const URL = `${environment.apiUrl}/bases`;
   providedIn: 'root',
 })
 export class BasesService {
-  activeBases: any[];
-
-  constructor(public http: HttpClient, public wsService: WebsocketService) {}
+  constructor(public http: HttpClient) {}
 
   getBase(id: string): Observable<Base> {
     return this.http.get<Base>(`${URL}/${id}`);

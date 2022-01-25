@@ -7,6 +7,8 @@ import { Map, marker, Marker, circle, Circle } from 'leaflet';
 import { BasesService } from 'src/app/services/api/bases.service';
 import { WsMessagesService } from 'src/app/services/websocket/ws-messages.service';
 import { GeolocationService } from 'src/app/services/geolocation.service';
+import { Base } from 'src/app/models/base';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-map',
@@ -14,16 +16,18 @@ import { GeolocationService } from 'src/app/services/geolocation.service';
   styleUrls: ['./map.page.scss'],
 })
 export class MapPage {
+  map: Map;
   mapOptions: MapOptions;
   basesMarkers: Marker[]; //Contient les markers à afficher sur la carte où se trouvent les bases
   basesCircles: Circle[]; //Contient les cercles à afficher sur la carte autour des bases
-  markers: any[]; //Contient à terme tous les markers
-  basesToDisplay: any;
+  markers: any[]; //Contient à terme tous les markers (cercles et markers)
+  basesToDisplay: Base[];
 
   constructor(
     readonly basesService: BasesService,
     readonly wsMessagesService: WsMessagesService,
-    readonly geolocService: GeolocationService
+    readonly geolocService: GeolocationService,
+    private router: Router
   ) {
     //Set les options de la carte
     this.mapOptions = {
@@ -39,11 +43,13 @@ export class MapPage {
       center: latLng(0, 0),
     };
 
+    //Initialisation des tableaux
     this.basesMarkers = [];
     this.basesCircles = [];
   }
 
   onMapReady(map: Map) {
+    this.map = map;
     setTimeout(() => map.invalidateSize(), 0);
 
     //Place la caméra à la position initiale du joueur lorsqu'il ouvre l'app
@@ -65,6 +71,15 @@ export class MapPage {
         });
 
         this.markers = [userMarker, ...this.basesMarkers, ...this.basesCircles];
+        this.basesMarkers.forEach((marker) => {
+          if (marker.listener !== true) {
+            marker.addEventListener('click', () => {
+              //   console.log(marker.baseId);
+              this.router.navigate(['/base/' + marker.baseId]);
+            });
+            marker.listener = true;
+          }
+        });
       });
     }, 1000);
   }
@@ -72,21 +87,23 @@ export class MapPage {
   addMarker(isActive: boolean, base, userCount = 0) {
     let icon = defaultIcon;
     let tooltip = base.name;
-    let color = 'blue';
     let fillColor = '#3d85c6';
 
     if (isActive) {
       icon = usedIcon;
       tooltip += '<br> Nombre de joueurs actifs: ' + userCount;
-      color = 'red';
       fillColor = '#f03';
     }
 
-    this.basesMarkers.push(
-      marker([base.location.coordinates[0], base.location.coordinates[1]], {
+    let markerToPush = marker(
+      [base.location.coordinates[0], base.location.coordinates[1]],
+      {
         icon: icon,
-      }).bindTooltip(tooltip)
-    );
+      }
+    ).bindTooltip(tooltip);
+    markerToPush.baseId = base.id;
+
+    this.basesMarkers.push(markerToPush);
 
     this.basesCircles.push(
       circle([base.location.coordinates[0], base.location.coordinates[1]], {
@@ -101,15 +118,7 @@ export class MapPage {
   ionViewDidEnter() {
     //Récupère toutes les bases de la bdd via l'API
     this.basesService.getBases().subscribe((bases) => {
-      this.basesToDisplay = bases.map((base) => {
-        return {
-          id: base.id,
-          name: base.name,
-          investments: base.investments,
-          location: base.location,
-          owner: base.owner,
-        };
-      });
+      this.basesToDisplay = bases;
 
       //Récupère toutes les bases actives via WS
       this.wsMessagesService.updateBases$.subscribe((activeBases) => {
@@ -128,6 +137,16 @@ export class MapPage {
           this.addMarker(isActive, base, userCount);
         });
       });
+    });
+  }
+
+  centerMap() {
+    console.log(this.basesToDisplay);
+    this.geolocService.getCurrentPosition().then((position) => {
+      this.map.setView(
+        latLng(position.coords.latitude, position.coords.longitude),
+        16
+      );
     });
   }
 }
