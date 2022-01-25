@@ -26,6 +26,11 @@
     </form>
   </div>
 
+  <div>
+    <h2>Position</h2>
+    <a [routerLink]="['/map', this.actualBaseId]">Voir sur la carte</a>
+  </div>
+
   <div *ngIf="investments">
     <h2>Investisseurs</h2>
     <div *ngFor="let investment of investments">

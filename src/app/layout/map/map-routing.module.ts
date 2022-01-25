@@ -6,8 +6,12 @@ import { MapPage } from './map.page';
 const routes: Routes = [
   {
     path: '',
-    component: MapPage
-  }
+    component: MapPage,
+  },
+  {
+    path: ':id',
+    component: MapPage,
+  },
 ];
 
 @NgModule({

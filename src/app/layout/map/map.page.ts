@@ -8,7 +8,8 @@ import { BasesService } from 'src/app/services/api/bases.service';
 import { WsMessagesService } from 'src/app/services/websocket/ws-messages.service';
 import { GeolocationService } from 'src/app/services/geolocation.service';
 import { Base } from 'src/app/models/base';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-map',
@@ -18,8 +19,8 @@ import { Router } from '@angular/router';
 export class MapPage {
   map: Map;
   mapOptions: MapOptions;
-  basesMarkers: Marker[]; //Contient les markers à afficher sur la carte où se trouvent les bases
-  basesCircles: Circle[]; //Contient les cercles à afficher sur la carte autour des bases
+  basesMarkers: Marker[] = []; //Contient les markers à afficher sur la carte où se trouvent les bases
+  basesCircles: Circle[] = []; //Contient les cercles à afficher sur la carte autour des bases
   markers: any[]; //Contient à terme tous les markers (cercles et markers)
   basesToDisplay: Base[];
 
@@ -27,7 +28,8 @@ export class MapPage {
     readonly basesService: BasesService,
     readonly wsMessagesService: WsMessagesService,
     readonly geolocService: GeolocationService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     //Set les options de la carte
     this.mapOptions = {
@@ -42,10 +44,6 @@ export class MapPage {
       zoom: 13,
       center: latLng(0, 0),
     };
-
-    //Initialisation des tableaux
-    this.basesMarkers = [];
-    this.basesCircles = [];
   }
 
   onMapReady(map: Map) {
@@ -120,6 +118,22 @@ export class MapPage {
     this.basesService.getBases().subscribe((bases) => {
       this.basesToDisplay = bases;
 
+      //Si un id est spécifié, centre la carte dessus
+      if (this.route.snapshot.paramMap.get('id') !== null) {
+        let baseToShow = this.basesToDisplay.find(
+          (base) => base.id == this.route.snapshot.paramMap.get('id')
+        );
+        if (baseToShow != null) {
+          this.map.setView(
+            latLng(
+              baseToShow.location.coordinates[0],
+              baseToShow.location.coordinates[1]
+            ),
+            16
+          );
+        }
+      }
+
       //Récupère toutes les bases actives via WS
       this.wsMessagesService.updateBases$.subscribe((activeBases) => {
         this.basesMarkers = [];
@@ -141,7 +155,6 @@ export class MapPage {
   }
 
   centerMap() {
-    console.log(this.basesToDisplay);
     this.geolocService.getCurrentPosition().then((position) => {
       this.map.setView(
         latLng(position.coords.latitude, position.coords.longitude),

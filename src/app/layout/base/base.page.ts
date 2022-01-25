@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Base } from 'src/app/models/base';
 import { BasesService } from 'src/app/services/api/bases.service';
 import { AuthService } from 'src/app/auth/auth.service';
@@ -19,6 +19,7 @@ export class BasePage implements OnInit {
   constructor(
     private auth: AuthService,
     private route: ActivatedRoute,
+    private router: Router,
     private basesService: BasesService
   ) {
     this.actualBaseId = this.route.snapshot.paramMap.get('id');
