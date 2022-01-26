@@ -25,8 +25,9 @@ export class LoginPage {
    * (probably because the name or password is incorrect).
    */
   loginError: boolean;
+  notification: string;
 
-  constructor(private auth: AuthService, private router: Router) {
+  constructor(private authService: AuthService, private router: Router) {
     this.authRequest = {
       name: undefined,
       password: undefined,
@@ -46,12 +47,17 @@ export class LoginPage {
     this.loginError = false;
 
     // Perform the authentication request to the API.
-    this.auth.logIn$(this.authRequest).subscribe({
+    this.authService.logIn$(this.authRequest).subscribe({
       next: () => this.router.navigateByUrl('/'),
       error: (err) => {
         this.loginError = true;
         console.warn(`Authentication failed: ${err.message}`);
       },
     });
+  }
+
+  ionViewDidEnter() {
+    this.notification = this.authService.notification;
+    this.authService.notification = undefined;
   }
 }
