@@ -20,7 +20,7 @@ export class RankingPage implements OnInit {
     private orderPipe: OrderPipe
   ) {
     this.sortType = 'rank';
-    this.sortReverse = true;
+    this.sortReverse = false;
   }
 
   ngOnInit() {}

@@ -19,17 +19,17 @@
     </ion-toolbar>
   </ion-header>
 
-  <div *ngIf="actualUser">
-    <form (submit)="updateUserName(actualUser)">
+  <div *ngIf="user">
+    <form (submit)="updateUserName(user)">
       <ion-input
         type="text"
-        placeholder="{{ actualUser.name }}"
-        [(ngModel)]="actualUser.name"
-        name="actualUser.name"
+        placeholder="{{ user.name }}"
+        [(ngModel)]="user.name"
+        name="user.name"
         required
         disabled="{{ !editionMode }}"
       ></ion-input>
-      <div class="edit">
+      <div *ngIf="user === actualUser" class="edit">
         <ion-button *ngIf="!editionMode" (click)="editionMode = true">
           Edit
         </ion-button>

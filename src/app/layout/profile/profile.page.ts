@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from 'src/app/auth/auth.service';
 import { User } from 'src/app/models/user';
 import { Base } from 'src/app/models/base';
@@ -14,28 +14,48 @@ import { ThrowStmt } from '@angular/compiler';
 })
 export class ProfilePage implements OnInit {
   actualUser: User;
+  user: User;
+  userId: string;
   bases: Base[];
   editionMode: boolean;
 
   constructor(
     // Inject the authentication provider.
     private auth: AuthService,
+    private route: ActivatedRoute,
     private basesService: BasesService,
     private usersService: UsersService,
     // Inject the router
     private router: Router
-  ) {}
+  ) {
+    this.userId = this.route.snapshot.paramMap.get('id');
+  }
 
   ngOnInit() {
+    // Get the actual logged user
     this.auth.getUser$().subscribe((user) => {
       this.actualUser = user;
     });
+
+    // There is a user id in param and it's different that the actual logged user
+    if (this.userId && this.userId !== this.actualUser.id) {
+      this.usersService.getUser(this.userId).subscribe((user) => {
+        this.user = user;
+      });
+    } else {
+      this.user = this.actualUser;
+    }
+
     this.editionMode = false;
   }
 
   updateUserName(user: User) {
     this.editionMode = false;
-    this.actualUser = user;
+    this.user = user;
+    // Nécessaire ?
+    if (this.user !== this.actualUser) {
+      return;
+    }
     this.usersService
       .patchUserName(user.id, user.name)
       .subscribe((userToUpdate) => {
@@ -51,8 +71,10 @@ export class ProfilePage implements OnInit {
   }
 
   ionViewDidEnter() {
-    this.basesService.getUserBases(this.actualUser).subscribe((bases) => {
-      this.bases = bases;
-    });
+    if (this.user) {
+      this.basesService.getUserBases(this.user).subscribe((bases) => {
+        this.bases = bases;
+      });
+    }
   }
 }
