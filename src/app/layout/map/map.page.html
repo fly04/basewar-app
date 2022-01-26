@@ -11,8 +11,6 @@
     (leafletMapReady)="onMapReady($event)"
   ></div>
 
-  <!-- Crescent -->
-
   <ion-spinner
     *ngIf="this.basesMarkers.length <= 0"
     name="lines"
@@ -29,4 +27,23 @@
       <ion-icon name="navigate-outline"></ion-icon>
     </ion-fab-button>
   </ion-fab>
+
+  <ion-fab vertical="bottom" horizontal="start" slot="fixed">
+    <ion-fab-button
+      [disabled]="this.basesMarkers.length <= 0"
+      (click)="create()"
+    >
+      <ion-icon
+        *ngIf="this.userIsInBase == true"
+        name="diamond-outline"
+      ></ion-icon>
+      <ion-icon
+        *ngIf="this.userIsInBase == false"
+        name="add-outline"
+      ></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <!-- <ion-alert-controller></ion-alert-controller> -->
+  <ion-button expand="block">Show Alert</ion-button>
 </ion-content>

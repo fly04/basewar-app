@@ -1,4 +1,5 @@
 import { Component, NgZone, OnInit } from '@angular/core';
+import { AlertController } from '@ionic/angular';
 import { defaultIcon } from './markers/default-marker';
 import { usedIcon } from './markers/used-marker';
 import { userIcon } from './markers/user-marker';
@@ -26,6 +27,10 @@ export class MapPage {
   markers: any[]; //Contient à terme tous les markers (cercles et markers)
   basesToDisplay: Base[];
   refreshMap = new ReplaySubject();
+  userIsInBase: boolean;
+  lastLat: number;
+  lastLng: number;
+  lastSeenBase: Base;
 
   constructor(
     readonly basesService: BasesService,
@@ -33,7 +38,8 @@ export class MapPage {
     readonly geolocService: GeolocationService,
     private router: Router,
     private route: ActivatedRoute,
-    private zone: NgZone
+    private zone: NgZone,
+    private alertController: AlertController
   ) {
     //Set les options de la carte
     this.mapOptions = {
@@ -55,6 +61,25 @@ export class MapPage {
         ...this.basesMarkers,
         ...this.basesCircles,
       ];
+
+      let isUserInBase = false;
+      if (this.basesToDisplay != null) {
+        this.basesToDisplay.forEach((base) => {
+          let distance = this.getDistance(
+            this.lastLat,
+            this.lastLng,
+            base.location.coordinates[0],
+            base.location.coordinates[1]
+          );
+          if (distance <= 200) {
+            isUserInBase = true;
+            this.lastSeenBase = base;
+          }
+
+          //emits true or false
+          this.userIsInBase = isUserInBase;
+        });
+      }
     });
   }
 
@@ -73,12 +98,13 @@ export class MapPage {
     // Chaque seconde la position du userMarker est actualisée
     setInterval(() => {
       this.geolocService.getCurrentPosition().then((position) => {
-        let lat = position.coords.latitude;
-        let lng = position.coords.longitude;
+        this.lastLat = position.coords.latitude;
+        this.lastLng = position.coords.longitude;
 
-        this.userMarker = marker([lat, lng], {
+        this.userMarker = marker([this.lastLat, this.lastLng], {
           icon: userIcon,
         });
+
         this.refreshMap.next();
       });
     }, 1000);
@@ -169,5 +195,48 @@ export class MapPage {
         stroke: false,
       })
     );
+  }
+
+  //Calculate distance between two points in meters
+  getDistance(lat1, lon1, lat2, lon2) {
+    const R = 6371; // Radius of the earth in km
+    const dLat = this.deg2rad(lat2 - lat1);
+    const dLon = this.deg2rad(lon2 - lon1);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(this.deg2rad(lat1)) *
+        Math.cos(this.deg2rad(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const d = R * c; // Distance in km
+    return d * 1000;
+  }
+
+  deg2rad(deg) {
+    return deg * (Math.PI / 180);
+  }
+
+  create() {
+    if (this.userIsInBase) {
+      this.createInvestmentAlert();
+    } else {
+      this.createBase();
+    }
+  }
+
+  createInvestmentAlert = async () => {
+    const alert = await this.alertController.create({
+      header: 'Investir dans la base ' + this.lastSeenBase.name,
+      message: 'Souhaitez-vous investir 500 diamants dans cette base ?',
+      buttons: ['Annuler', 'Investir'],
+    });
+    await alert.present();
+    const result = await alert.onDidDismiss();
+    console.log(result);
+  };
+
+  createBase() {
+    console.log('create base.');
   }
 }
