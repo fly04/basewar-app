@@ -33,8 +33,10 @@
     </form>
   </div>
 
-  <h2>Bases</h2>
-  <div *ngFor="let base of bases">
-    <a [routerLink]="['/base', base.id]">{{ base.name }}</a>
+  <div *ngIf="bases">
+    <h2>Bases</h2>
+    <div *ngFor="let base of bases">
+      <a [routerLink]="['/base', base.id]">{{ base.name }}</a>
+    </div>
   </div>
 </ion-content>

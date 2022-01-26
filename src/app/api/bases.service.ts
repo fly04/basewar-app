@@ -35,11 +35,15 @@ export class BasesService {
 
   getUserBases(userID): Observable<Base[]> {
     return this.http.get<Base[]>(`${URL}?ownerId=${userID.id}`);
+    // ERROR HANDLER A IMPLEMENTER
+    // .pipe(catchError(this.handleError('patchUserName')));
   }
 
   getInvestments(id: string): Observable<any> {
     const url = `${URL}/${id}/investments`;
     return this.http.get<Investment[]>(url);
+    // ERROR HANDLER A IMPLEMENTER
+    // .pipe(catchError(this.handleError('patchUserName')));
   }
 
   patchBaseName(id: string, newBaseName: string): Observable<any> {
