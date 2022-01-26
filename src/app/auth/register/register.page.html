@@ -1,11 +1,16 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Login</ion-title>
+    <ion-title>
+      <a [routerLink]="['/login']">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </a>
+      Inscription
+    </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <form #loginForm="ngForm" (submit)="onSubmit(loginForm)">
+  <form #registerForm="ngForm" (submit)="onSubmit(registerForm)">
     <ion-list>
       <!-- Username input -->
       <ion-item>
@@ -15,7 +20,7 @@
           #username="ngModel"
           required="true"
           name="name"
-          [(ngModel)]="authRequest.name"
+          [(ngModel)]="user.name"
         ></ion-input>
       </ion-item>
 
@@ -35,7 +40,7 @@
           required="true"
           type="password"
           name="password"
-          [(ngModel)]="authRequest.password"
+          [(ngModel)]="user.password"
         ></ion-input>
       </ion-item>
 
@@ -47,27 +52,18 @@
 
     <div class="ion-padding">
       <!-- Submit button -->
-      <ion-button type="submit" expand="block" [disabled]="loginForm.invalid">
-        Connexion
+      <ion-button
+        type="submit"
+        expand="block"
+        [disabled]="registerForm.invalid"
+      >
+        S'inscrire
       </ion-button>
 
       <!-- Error message displayed if the login failed -->
-      <ion-text color="danger" *ngIf="loginError">
+      <ion-text color="danger" *ngIf="registerError">
         Nom d'utilisateur ou mot de passe invalides.
       </ion-text>
-
-      <hr />
-
-      <div>
-        <ion-text>
-          Pas encore de compte ?
-          <a [routerLink]="['/register']">S'inscrire</a>
-        </ion-text>
-      </div>
     </div>
   </form>
-
-  <ion-item *ngIf="notification !== undefined" color="primary">
-    <ion-label>{{ notification }}</ion-label>
-  </ion-item>
 </ion-content>

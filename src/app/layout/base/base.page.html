@@ -34,7 +34,9 @@
   <div *ngIf="investments">
     <h2>Investisseurs</h2>
     <div *ngFor="let investment of investments">
-      {{ investment.investor.name }}
+      <a [routerLink]="['/profile', investment.investor.id]">
+        {{ investment.investor.name }}
+      </a>
     </div>
   </div>
 </ion-content>

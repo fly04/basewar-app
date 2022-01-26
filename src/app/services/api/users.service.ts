@@ -4,6 +4,7 @@ import { Observable, of } from 'rxjs';
 import { User } from 'src/app/models/user';
 import { environment } from 'src/environments/environment';
 import { filter, map, catchError } from 'rxjs/operators';
+import { UserRegister } from '../../models/user-register';
 
 const URL = `${environment.apiUrl}/users`;
 
@@ -24,8 +25,8 @@ export class UsersService {
     //ERROR HANDLER A IMPLEMENTER
   }
 
-  postUser(user: User): Observable<User> {
-    const url = `${URL}/${user.id}`;
+  postUser(user: UserRegister): Observable<User> {
+    const url = `${URL}`;
     return this.http.post<User>(url, user);
     //ERROR HANDLER A IMPLEMENTER
     // .pipe(catchError(this.handleError('postUser', user)));

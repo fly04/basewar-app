@@ -20,7 +20,7 @@ export class RankingPage implements OnInit {
     private orderPipe: OrderPipe
   ) {
     this.sortType = 'rank';
-    this.sortReverse = true;
+    this.sortReverse = false;
   }
 
   ngOnInit() {}
@@ -29,6 +29,7 @@ export class RankingPage implements OnInit {
     this.usersService.getUsers().subscribe((users) => {
       this.usersToDisplay = users.map((user, index) => {
         return {
+          id: user.id,
           rank: index + 1,
           name: user.name,
           money: user.money,

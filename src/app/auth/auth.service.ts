@@ -8,6 +8,7 @@ import { AuthResponse } from '../models/auth-response';
 import { User } from '../models/user';
 import { AuthRequest } from '../models/auth-request';
 import { environment } from 'src/environments/environment';
+import { ThrowStmt } from '@angular/compiler';
 
 /**
  * Authentication service for login/logout.
@@ -16,6 +17,7 @@ import { environment } from 'src/environments/environment';
 export class AuthService {
   #auth$: ReplaySubject<AuthResponse | undefined>;
   #auth: AuthResponse | undefined;
+  notification: string;
 
   constructor(private http: HttpClient, private storage: Storage) {
     this.#auth$ = new ReplaySubject(1);
@@ -53,7 +55,11 @@ export class AuthService {
     );
   }
 
-  updateAuth(user: User) {
+  notify(notification: string): void {
+    this.notification = notification;
+  }
+
+  updateAuth(user: User): void {
     this.#auth.user = user;
     this.saveAuth$(this.#auth);
     this.#auth$.next(this.#auth);
