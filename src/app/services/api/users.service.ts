@@ -4,7 +4,7 @@ import { Observable, of } from 'rxjs';
 import { User } from 'src/app/models/user';
 import { environment } from 'src/environments/environment';
 import { filter, map, catchError } from 'rxjs/operators';
-import { UserRegister } from '../models/user-register';
+import { UserRegister } from '../../models/user-register';
 
 const URL = `${environment.apiUrl}/users`;
 

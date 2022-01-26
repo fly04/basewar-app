@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { UsersService } from '../../api/users.service';
+import { UsersService } from '../../services/api/users.service';
 import { AuthRequest } from '../../models/auth-request';
 import { UserRegister } from 'src/app/models/user-register';
 import { AuthService } from '../auth.service';
