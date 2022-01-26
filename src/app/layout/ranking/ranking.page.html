@@ -53,6 +53,7 @@
   <!-- Liste d'utilisateurs -->
   <ion-list>
     <ion-item
+      [routerLink]="['/profile', user.id]"
       *ngFor="let user of usersToDisplay | filter:searchTerm | orderBy:sortType:sortReverse "
     >
       <ion-icon slot="start" icon="happy"></ion-icon>
