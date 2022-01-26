@@ -6,6 +6,7 @@ import { Base } from 'src/app/models/base';
 import { BasesService } from 'src/app/api/bases.service';
 import { UsersService } from 'src/app/api/users.service';
 import { ThrowStmt } from '@angular/compiler';
+import { observable, Observable, ReplaySubject } from 'rxjs';
 
 @Component({
   selector: 'app-profile',
@@ -36,26 +37,17 @@ export class ProfilePage implements OnInit {
     this.auth.getUser$().subscribe((user) => {
       this.actualUser = user;
     });
-
-    // There is a user id in param and it's different that the actual logged user
-    if (this.userId && this.userId !== this.actualUser.id) {
-      this.usersService.getUser(this.userId).subscribe((user) => {
-        this.user = user;
-      });
-    } else {
-      this.user = this.actualUser;
-    }
-
-    this.editionMode = false;
   }
 
   updateUserName(user: User) {
     this.editionMode = false;
-    this.user = user;
     // Nécessaire ?
-    if (this.user !== this.actualUser) {
+    if (user !== this.actualUser) {
       return;
     }
+
+    this.user = user;
+
     this.usersService
       .patchUserName(user.id, user.name)
       .subscribe((userToUpdate) => {
@@ -71,10 +63,25 @@ export class ProfilePage implements OnInit {
   }
 
   ionViewDidEnter() {
-    if (this.user) {
+    this.editionMode = false;
+
+    const sub = new ReplaySubject();
+
+    // There is a user id in param and it's different that the actual logged user
+    if (this.userId && this.userId !== this.actualUser.id) {
+      this.usersService.getUser(this.userId).subscribe((user) => {
+        this.user = user;
+        sub.next();
+      });
+    } else {
+      this.user = this.actualUser;
+      sub.next();
+    }
+
+    sub.subscribe(() => {
       this.basesService.getUserBases(this.user).subscribe((bases) => {
         this.bases = bases;
       });
-    }
+    });
   }
 }
