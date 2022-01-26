@@ -10,7 +10,15 @@
     [leafletLayers]="markers"
     (leafletMapReady)="onMapReady($event)"
   ></div>
-  <!-- fab placed to the bottom end -->
+
+  <!-- Crescent -->
+
+  <ion-spinner
+    *ngIf="this.basesMarkers.length <= 0"
+    name="lines"
+    color="secondary"
+  ></ion-spinner>
+
   <ion-fab
     vertical="bottom"
     horizontal="end"

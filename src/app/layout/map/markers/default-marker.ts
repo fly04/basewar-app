@@ -1,4 +1,4 @@
-import { Icon, IconOptions, icon } from 'leaflet';
+import { Icon, IconOptions, icon, Marker } from 'leaflet';
 export const defaultIcon: Icon<IconOptions> = icon({
   // This define the displayed icon size, in pixel
   iconSize: [25, 41],
