@@ -7,6 +7,7 @@ import { BasesService } from 'src/app/services/api/bases.service';
 import { UsersService } from 'src/app/services/api/users.service';
 import { ThrowStmt } from '@angular/compiler';
 import { observable, Observable, ReplaySubject } from 'rxjs';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-profile',
@@ -27,7 +28,9 @@ export class ProfilePage implements OnInit {
     private basesService: BasesService,
     private usersService: UsersService,
     // Inject the router
-    private router: Router
+    private router: Router,
+    private alertController: AlertController,
+    private authService: AuthService
   ) {
     this.userId = this.route.snapshot.paramMap.get('id');
   }
@@ -55,6 +58,26 @@ export class ProfilePage implements OnInit {
       });
   }
 
+  async deleteUser(user: User) {
+    const alert = await this.alertController.create({
+      header: 'Supprimer le compte',
+      message: 'Voulez-vous vraiment supprimer votre compte ?',
+      buttons: [
+        { text: 'Oui', role: 'true' },
+        { text: 'Non', role: 'false' },
+      ],
+    });
+
+    await alert.present();
+    const result = await alert.onDidDismiss();
+
+    if (result.role === 'true') {
+      this.usersService.deleteUser(user.id).subscribe(() => {
+        this.authService.notify(`Utilisateur ${this.user.name} a été supprimé`);
+        this.logOut();
+      });
+    }
+  }
   // Add a method to log out.
   logOut() {
     console.log('logging out...');

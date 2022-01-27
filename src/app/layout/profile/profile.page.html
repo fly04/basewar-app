@@ -24,11 +24,17 @@
         required
         disabled="{{ !editionMode }}"
       ></ion-input>
-      <div *ngIf="user === actualUser" class="edit">
+      <div *ngIf="user === actualUser">
         <ion-button *ngIf="!editionMode" (click)="editionMode = true">
           Edit
         </ion-button>
         <ion-button type="submit" *ngIf="editionMode">Confirm</ion-button>
+      </div>
+    </form>
+
+    <form (submit)="deleteUser(user)">
+      <div *ngIf="user === actualUser">
+        <ion-button type="submit">Delete</ion-button>
       </div>
     </form>
   </div>
