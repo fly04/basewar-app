@@ -26,15 +26,15 @@
       ></ion-input>
       <div *ngIf="user === actualUser">
         <ion-button *ngIf="!editionMode" (click)="editionMode = true">
-          Edit
+          Renommer
         </ion-button>
-        <ion-button type="submit" *ngIf="editionMode">Confirm</ion-button>
+        <ion-button type="submit" *ngIf="editionMode">Confirmer</ion-button>
       </div>
     </form>
 
     <form (submit)="deleteUser(user)">
       <div *ngIf="user === actualUser">
-        <ion-button type="submit">Delete</ion-button>
+        <ion-button type="submit">Supprimer</ion-button>
       </div>
     </form>
   </div>

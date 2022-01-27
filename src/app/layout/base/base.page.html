@@ -17,11 +17,11 @@
         required
         disabled="{{ !editionMode }}"
       ></ion-input>
-      <div class="edit">
+      <div *ngIf="actualBase.owner.id === actualUser.id" class="edit">
         <ion-button *ngIf="!editionMode" (click)="editionMode = true">
-          Edit
+          Renommer
         </ion-button>
-        <ion-button type="submit" *ngIf="editionMode">Confirm</ion-button>
+        <ion-button type="submit" *ngIf="editionMode">Confirmer</ion-button>
       </div>
     </form>
   </div>
