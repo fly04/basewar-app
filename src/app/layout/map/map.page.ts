@@ -309,18 +309,20 @@ export class MapPage implements OnInit {
         baseId: this.lastSeenBase.id,
         investorId: user.id,
       };
-      this.basesService.postInvestment(investmentToCreate);
-
-      //Display message
-      const alert = await this.alertController.create({
-        header: 'Investissement effectué',
-        message:
-          'Félicitation, vous avez investi dans ' +
-          this.lastSeenBase.name +
-          '!',
-        buttons: [{ text: 'Retour' }],
-      });
-      await alert.present();
+      this.basesService
+        .postInvestment(investmentToCreate)
+        .subscribe(async () => {
+          //Display message
+          const alert = await this.alertController.create({
+            header: 'Investissement effectué',
+            message:
+              'Félicitation, vous avez investi dans ' +
+              this.lastSeenBase.name +
+              '!',
+            buttons: [{ text: 'Retour' }],
+          });
+          await alert.present();
+        });
     });
   }
 
@@ -443,14 +445,15 @@ export class MapPage implements OnInit {
       },
     };
 
-    this.basesService.postBase(baseToCreate);
-    //Display creation success message
-    const alert = await this.alertController.create({
-      header: 'Base créée',
-      message:
-        'Félicitation, vous avez crée la base ' + baseToCreate.name + '!',
-      buttons: [{ text: 'Retour' }],
+    this.basesService.postBase(baseToCreate).subscribe(async () => {
+      //Display creation success message
+      const alert = await this.alertController.create({
+        header: 'Base créée',
+        message:
+          'Félicitation, vous avez crée la base ' + baseToCreate.name + '!',
+        buttons: [{ text: 'Retour' }],
+      });
+      await alert.present();
     });
-    await alert.present();
   };
 }
