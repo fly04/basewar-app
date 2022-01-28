@@ -1,12 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { Base } from 'src/app/models/base';
 import { Investment } from 'src/app/models/investment';
 import { InvestmentToCreate } from 'src/app/models/investment-to-create';
 import { environment } from 'src/environments/environment';
 import { WebsocketService } from '../websocket/websocket.service';
-import { filter, map } from 'rxjs/operators';
+import { catchError, filter, map } from 'rxjs/operators';
 import { User } from 'src/app/models/user';
 import { BaseToCreate } from 'src/app/models/base-to-create';
 

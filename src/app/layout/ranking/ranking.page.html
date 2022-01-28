@@ -1,10 +1,5 @@
 <app-header>
-  <ion-title title>
-    <a href="">
-      <ion-icon name="arrow-back-outline"></ion-icon>
-    </a>
-    Classement
-  </ion-title>
+  <ion-title title> Classement </ion-title>
 </app-header>
 
 <ion-content>
@@ -25,11 +20,11 @@
         >Nom
 
         <!-- Flèche vers le bas -->
-        <span *ngIf="sortType == 'name' && sortReverse == true">
+        <span *ngIf="sortType === 'name' && sortReverse === true">
           <ion-icon name="chevron-down-outline"></ion-icon>
         </span>
         <!-- Flèche vers le haut -->
-        <span *ngIf="sortType == 'name' && sortReverse == false">
+        <span *ngIf="sortType === 'name' && sortReverse === false">
           <ion-icon name="chevron-up-outline"></ion-icon></span
       ></ion-label>
 
@@ -39,11 +34,11 @@
         slot="end"
         >Argent
         <!-- Flèche vers le bas -->
-        <span *ngIf="sortType == 'rank' && sortReverse == true">
+        <span *ngIf="sortType === 'rank' && sortReverse === true">
           <ion-icon name="chevron-down-outline"></ion-icon>
         </span>
         <!-- Flèche vers le haut -->
-        <span *ngIf="sortType == 'rank' && sortReverse == false">
+        <span *ngIf="sortType === 'rank' && sortReverse === false">
           <ion-icon name="chevron-up-outline"></ion-icon>
         </span>
       </ion-label>

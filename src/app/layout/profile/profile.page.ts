@@ -48,16 +48,10 @@ export class ProfilePage implements OnInit {
 
   updateUserName(user: User) {
     this.editionMode = false;
-    // Nécessaire ?
-    if (user !== this.actualUser) {
-      return;
-    }
-
-    this.user = user;
-
     this.usersService
       .patchUserName(user.id, user.name)
       .subscribe((userToUpdate) => {
+        this.user = userToUpdate;
         this.auth.updateAuth(userToUpdate);
       });
   }
