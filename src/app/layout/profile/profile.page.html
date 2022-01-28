@@ -14,6 +14,8 @@
     </ion-toolbar>
   </ion-header>
 
+  <button (click)="notify()">NOTIFICATION</button>
+
   <div *ngIf="user">
     <form (submit)="updateUserName(user)">
       <ion-input

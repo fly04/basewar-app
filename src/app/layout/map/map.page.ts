@@ -443,14 +443,15 @@ export class MapPage implements OnInit {
       },
     };
 
-    this.basesService.postBase(baseToCreate);
-    //Display creation success message
-    const alert = await this.alertController.create({
-      header: 'Base créée',
-      message:
-        'Félicitation, vous avez crée la base ' + baseToCreate.name + '!',
-      buttons: [{ text: 'Retour' }],
+    this.basesService.postBase(baseToCreate).subscribe(async () => {
+      //Display creation success message
+      const alert = await this.alertController.create({
+        header: 'Base créée',
+        message:
+          'Félicitation, vous avez crée la base ' + baseToCreate.name + '!',
+        buttons: [{ text: 'Retour' }],
+      });
+      await alert.present();
     });
-    await alert.present();
   };
 }

@@ -5,6 +5,7 @@ import { User } from 'src/app/models/user';
 import { Base } from 'src/app/models/base';
 import { BasesService } from 'src/app/services/api/bases.service';
 import { UsersService } from 'src/app/services/api/users.service';
+import { LocalNotificationService } from 'src/app/services/local-notification.service';
 import { ThrowStmt } from '@angular/compiler';
 import { observable, Observable, ReplaySubject } from 'rxjs';
 
@@ -27,9 +28,14 @@ export class ProfilePage implements OnInit {
     private basesService: BasesService,
     private usersService: UsersService,
     // Inject the router
-    private router: Router
+    private router: Router,
+    private localNotifService: LocalNotificationService
   ) {
     this.userId = this.route.snapshot.paramMap.get('id');
+  }
+
+  notify() {
+    this.localNotifService.showLocalNotification();
   }
 
   ngOnInit() {
