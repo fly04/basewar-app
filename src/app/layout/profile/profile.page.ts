@@ -35,7 +35,7 @@ export class ProfilePage implements OnInit {
   }
 
   notify() {
-    this.localNotifService.showLocalNotification();
+    // this.localNotifService.showLocalNotification();
   }
 
   ngOnInit() {

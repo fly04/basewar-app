@@ -3,6 +3,8 @@ import { Storage } from '@ionic/storage-angular';
 import { GeolocationService } from './services/geolocation.service';
 import { AuthService } from './auth/auth.service';
 import { WebsocketService } from './services/websocket/websocket.service';
+import { LocalNotificationService } from './services/local-notification.service';
+import { WsMessagesService } from './services/websocket/ws-messages.service';
 
 @Component({
   selector: 'app-root',
@@ -17,7 +19,9 @@ export class AppComponent {
   constructor(
     storage: Storage,
     readonly geolocService: GeolocationService,
-    websocketService: WebsocketService
+    readonly websocketService: WebsocketService,
+    readonly wsMessagesService: WsMessagesService,
+    readonly localNotificationService: LocalNotificationService
   ) {
     storage.create();
 
@@ -38,5 +42,14 @@ export class AppComponent {
         });
       });
     }, 5000);
+
+    this.localNotificationService.checkNotificationsPermissions();
+    this.wsMessagesService.visitorNotification$.subscribe((data) => {
+      this.localNotificationService.createNotification(
+        'Vous avez de la visite!',
+        `Un visiteur est entré dans votre base ${data.baseName}`,
+        Date.now()
+      );
+    });
   }
 }

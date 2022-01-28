@@ -5,24 +5,46 @@ import { LocalNotifications } from '@capacitor/local-notifications';
   providedIn: 'root',
 })
 export class LocalNotificationService {
-  constructor() {}
+  isPermitted: boolean;
 
-  async showLocalNotification() {
-    console.log('Notification!');
+  constructor() {
+    //Montre que la notification semble bien fonctionner sur mobile
+    // LocalNotifications.addListener(
+    //   'localNotificationReceived',
+    //   (notification) => {
+    //     console.log(notification);
+    //   }
+    // );
+  }
 
-    await LocalNotifications.requestPermissions();
+  async checkNotificationsPermissions() {
+    await LocalNotifications.checkPermissions().then(async (permissions) => {
+      if (permissions.display != 'granted') {
+        await LocalNotifications.requestPermissions().then(
+          async (requestedPermission) => {
+            if (requestedPermission.display == 'denied') {
+              this.isPermitted = false;
+            } else if (requestedPermission.display == 'granted') {
+              this.isPermitted = true;
+            }
+          }
+        );
+      } else if (permissions.display != 'granted') {
+        this.isPermitted = true;
+      }
+    });
+  }
 
+  async createNotification(title, body, id) {
+    if (!this.isPermitted) return;
     await LocalNotifications.schedule({
       notifications: [
         {
-          title: 'Hello',
-          body: 'Hello world!',
-          id: 1,
-          //   schedule: { at: new Date(Date.now() + 1000) },
+          title: title,
+          body: body,
+          id: id,
         },
       ],
-    }).then((res) => {
-      console.log(res);
     });
   }
 }
