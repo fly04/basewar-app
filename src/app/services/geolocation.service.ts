@@ -11,7 +11,12 @@ export class GeolocationService {
   constructor() {}
 
   public getCurrentPosition = async () => {
-    const coordinates = await Geolocation.getCurrentPosition();
+    let coordinates;
+    try {
+      coordinates = await Geolocation.getCurrentPosition();
+    } catch (error) {
+      console.log('Error occurred', error);
+    }
     return coordinates;
   };
 }

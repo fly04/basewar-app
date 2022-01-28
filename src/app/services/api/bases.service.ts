@@ -1,11 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { Base } from 'src/app/models/base';
 import { Investment } from 'src/app/models/investment';
 import { environment } from 'src/environments/environment';
 import { WebsocketService } from '../websocket/websocket.service';
-import { filter, map } from 'rxjs/operators';
+import { catchError, filter, map } from 'rxjs/operators';
 
 const URL = `${environment.apiUrl}/bases`;
 
@@ -25,8 +25,6 @@ export class BasesService {
 
   getUserBases(userID): Observable<Base[]> {
     return this.http.get<Base[]>(`${URL}?ownerId=${userID.id}`);
-    // ERROR HANDLER A IMPLEMENTER
-    // .pipe(catchError(this.handleError('patchUserName')));
   }
 
   getInvestments(id: string): Observable<any> {
