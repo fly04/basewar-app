@@ -32,6 +32,13 @@ export class UsersService {
     // .pipe(catchError(this.handleError('postUser', user)));
   }
 
+  deleteUser(id: string): Observable<User> {
+    const url = `${URL}/${id}`;
+    return this.http.delete<User>(url);
+    //ERROR HANDLER A IMPLEMENTER
+    // .pipe(catchError(this.handleError('postUser', user)));
+  }
+
   patchUserName(id: string, newUserName: string): Observable<any> {
     const url = `${URL}/${id}`;
     return this.http.patch(url, { name: newUserName });

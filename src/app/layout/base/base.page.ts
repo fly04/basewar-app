@@ -4,6 +4,8 @@ import { Base } from 'src/app/models/base';
 import { BasesService } from 'src/app/services/api/bases.service';
 import { AuthService } from 'src/app/auth/auth.service';
 import { Investment } from 'src/app/models/investment';
+import { User } from 'src/app/models/user';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-base',
@@ -13,6 +15,7 @@ import { Investment } from 'src/app/models/investment';
 export class BasePage implements OnInit {
   actualBase: Base;
   actualBaseId: string;
+  actualUser: User;
   editionMode: boolean;
   investments: Investment[];
 
@@ -27,6 +30,11 @@ export class BasePage implements OnInit {
 
   ngOnInit() {
     this.editionMode = false;
+
+    // Get the actual logged user
+    this.auth.getUser$().subscribe((user) => {
+      this.actualUser = user;
+    });
   }
 
   updateBaseName(base: Base) {
