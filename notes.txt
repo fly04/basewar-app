@@ -10,3 +10,6 @@ Todo pour la carte :
 Todo pour la prochaine fois :
 - Demander quoi comment pour le error handler (https://angular.io/tutorial/toh-pt6#get-hero-by-id)
 
+
+
+https://github.com/katzer/cordova-plugin-local-notifications
