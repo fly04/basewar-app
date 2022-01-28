@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, ErrorHandler } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { User } from 'src/app/models/user';
 import { environment } from 'src/environments/environment';
 import { filter, map, catchError } from 'rxjs/operators';
@@ -16,20 +16,18 @@ export class UsersService {
 
   getUsers(): Observable<User[]> {
     return this.http.get<User[]>(URL);
-    //ERROR HANDLER A IMPLEMENTER
+    // .pipe(catchError(this.handleError));
   }
 
   getUser(id: string): Observable<User> {
     const url = `${URL}/${id}`;
     return this.http.get<User>(url);
-    //ERROR HANDLER A IMPLEMENTER
+    // .pipe(catchError(this.handleError));
   }
 
   postUser(user: UserRegister): Observable<User> {
     const url = `${URL}`;
     return this.http.post<User>(url, user);
-    //ERROR HANDLER A IMPLEMENTER
-    // .pipe(catchError(this.handleError('postUser', user)));
   }
 
   deleteUser(id: string): Observable<User> {
