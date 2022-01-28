@@ -27,6 +27,9 @@ export class RankingPage implements OnInit {
 
   ionViewDidEnter() {
     this.usersService.getUsers().subscribe((users) => {
+      users = users.sort((a, b) =>
+        a.money < b.money ? 1 : b.money < a.money ? -1 : 0
+      );
       this.usersToDisplay = users.map((user, index) => {
         return {
           id: user.id,
