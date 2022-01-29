@@ -24,8 +24,7 @@
 
   <div>
     <h2>Position</h2>
-    <a [routerLink]="['/map', this.actualBaseId]">Voir sur la carte</a>
-    <!-- <a [routerLink]="['/map']">Voir sur la carte</a> -->
+    <a (click)="this.showOnMap()">Voir sur la carte</a>
   </div>
 
   <div *ngIf="investments">
