@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Base } from 'src/app/models/base';
 import { BasesService } from 'src/app/services/api/bases.service';
+import { UsersService } from 'src/app/services/api/users.service';
 import { ShowBaseService } from 'src/app/services/show-base.service';
 import { AuthService } from 'src/app/auth/auth.service';
 import { Investment } from 'src/app/models/investment';
@@ -19,12 +20,14 @@ export class BasePage implements OnInit {
   actualUser: User;
   editionMode: boolean;
   investments: Investment[];
+  baseOwner: User;
 
   constructor(
     private auth: AuthService,
     private route: ActivatedRoute,
     private router: Router,
     private basesService: BasesService,
+    private usersService: UsersService,
     private showBaseService: ShowBaseService
   ) {
     this.actualBaseId = this.route.snapshot.paramMap.get('id');
@@ -48,6 +51,10 @@ export class BasePage implements OnInit {
   ionViewDidEnter() {
     this.basesService.getBase(this.actualBaseId).subscribe((base) => {
       this.actualBase = base;
+
+      this.usersService.getUser(this.actualBase.owner.id).subscribe((user) => {
+        this.baseOwner = user;
+      });
     });
     this.basesService
       .getInvestments(this.actualBaseId)

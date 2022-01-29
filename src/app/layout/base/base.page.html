@@ -23,6 +23,13 @@
   </div>
 
   <div>
+    <h2>Propriétaire</h2>
+    <a *ngIf="baseOwner !== undefined" [routerLink]="['/profile', baseOwner.id]"
+      >{{baseOwner.name}}</a
+    >
+  </div>
+
+  <div>
     <h2>Position</h2>
     <a (click)="this.showOnMap()">Voir sur la carte</a>
   </div>
