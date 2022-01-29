@@ -8,6 +8,7 @@ import { AuthService } from 'src/app/auth/auth.service';
 import { Investment } from 'src/app/models/investment';
 import { User } from 'src/app/models/user';
 import { forkJoin } from 'rxjs';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-base',
@@ -28,7 +29,8 @@ export class BasePage implements OnInit {
     private router: Router,
     private basesService: BasesService,
     private usersService: UsersService,
-    private showBaseService: ShowBaseService
+    private showBaseService: ShowBaseService,
+    private alertController: AlertController
   ) {
     this.actualBaseId = this.route.snapshot.paramMap.get('id');
   }
@@ -46,6 +48,26 @@ export class BasePage implements OnInit {
     this.editionMode = false;
     this.actualBase = base;
     this.basesService.patchBaseName(base.id, base.name).subscribe();
+  }
+
+  async deleteBase(base: Base) {
+    const alert = await this.alertController.create({
+      header: 'Supprimer la base',
+      message: 'Voulez-vous vraiment supprimer cette base ?',
+      buttons: [
+        { text: 'Oui', role: 'true' },
+        { text: 'Non', role: 'false' },
+      ],
+    });
+
+    await alert.present();
+    const result = await alert.onDidDismiss();
+
+    if (result.role === 'true') {
+      this.basesService
+        .deleteBase(base.id)
+        .subscribe(() => this.router.navigate(['/map']));
+    }
   }
 
   ionViewDidEnter() {
