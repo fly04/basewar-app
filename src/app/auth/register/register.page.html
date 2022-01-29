@@ -20,14 +20,24 @@
           #username="ngModel"
           required="true"
           name="name"
+          min="3"
+          max="30"
           [(ngModel)]="user.name"
         ></ion-input>
       </ion-item>
 
       <!-- Error message displayed if the username is invalid -->
       <ion-item lines="none" *ngIf="username.invalid && username.touched">
-        <ion-text color="danger">
+        <ion-text *ngIf="username.errors.required" color="danger">
           Le nom d'utilisateur est obligatoire.
+        </ion-text>
+      </ion-item>
+      <ion-item lines="none" *ngIf="username.model">
+        <ion-text
+          *ngIf="username.model.length < 3 || username.model.length > 30"
+          color="danger"
+        >
+          Le nom d'utilisateur doit être compris entre 3 et 30 caractères.
         </ion-text>
       </ion-item>
 

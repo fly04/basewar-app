@@ -27,7 +27,6 @@ export class RankingPage implements OnInit {
 
   ionViewDidEnter() {
     this.usersService.getUsers().subscribe((users) => {
-      console.log(this.usersToDisplay);
       this.usersToDisplay = users.map((user, index) => ({
         id: user.id,
         rank: index + 1,

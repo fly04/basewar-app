@@ -46,7 +46,7 @@
   </ion-toolbar>
 
   <!-- Liste d'utilisateurs -->
-  <ion-list *ngIf="!usersToDisplay.status">
+  <ion-list *ngIf="usersToDisplay">
     <ion-item
       [routerLink]="['/profile', user.id]"
       *ngFor="let user of usersToDisplay | filter:searchTerm | orderBy:sortType:sortReverse "

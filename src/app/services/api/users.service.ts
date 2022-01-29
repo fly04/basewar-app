@@ -15,9 +15,7 @@ export class UsersService {
   constructor(public http: HttpClient) {}
 
   getUsers(): Observable<User[]> {
-    return this.http
-      .get<User[]>(URL + 'test')
-      .pipe(catchError((err) => of([err])));
+    return this.http.get<User[]>(URL).pipe(catchError((err) => of([err])));
   }
 
   getUser(id: string): Observable<User> {
