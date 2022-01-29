@@ -26,8 +26,10 @@ export class BasesService {
     return this.http.get<Base[]>(URL);
   }
 
-  getUserBases(user: User): Observable<Base[]> {
-    return this.http.get<Base[]>(`${URL}?ownerId=${user.id}`);
+  getUserBases(user: User): Observable<any> {
+    return this.http
+      .get<Base[]>(`${URL}?ownerId=${user.id}`)
+      .pipe(catchError((err) => of([])));
     // ERROR HANDLER A IMPLEMENTER
     // .pipe(catchError(this.handleError('patchUserName')));
   }
