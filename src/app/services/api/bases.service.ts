@@ -59,4 +59,9 @@ export class BasesService {
     // ERROR HANDLER A IMPLEMENTER
     // .pipe(catchError(this.handleError('patchUserName')));
   }
+
+  deleteBase(id: string): Observable<Base> {
+    const url = `${URL}/${id}`;
+    return this.http.delete<Base>(url);
+  }
 }

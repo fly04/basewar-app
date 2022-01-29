@@ -1,8 +1,8 @@
 <app-header>
-  <ion-title title> Mon profil </ion-title>
+  <ion-title title> Profil </ion-title>
 </app-header>
 
-<ion-content>
+<ion-content class="ion-padding">
   <ion-header>
     <ion-toolbar>
       <!-- Logout button -->
@@ -14,7 +14,7 @@
     </ion-toolbar>
   </ion-header>
 
-  <div class="ion-padding" *ngIf="user">
+  <div *ngIf="user">
     <form (submit)="updateUserName(user)">
       <ion-toolbar>
         <ion-input
@@ -41,11 +41,13 @@
     </form>
   </div>
 
-  <div class="ion-padding" *ngIf="bases">
+  <div *ngIf="bases">
     <h2>Bases</h2>
-    <div *ngFor="let base of bases">
-      <a [routerLink]="['/base', base.id]">{{ base.name }}</a>
-    </div>
+    <ion-list *ngFor="let base of bases">
+      <ion-item [routerLink]="['/base', base.id]">
+        <ion-label> {{ base.name }} </ion-label>
+      </ion-item>
+    </ion-list>
     <div *ngIf="bases.length === 0">
       <p>Aucune base pour le moment</p>
     </div>
