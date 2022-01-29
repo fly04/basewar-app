@@ -38,9 +38,12 @@
 
   <div>
     <h2>Propriétaire</h2>
-    <a *ngIf="baseOwner !== undefined" [routerLink]="['/profile', baseOwner.id]"
-      >{{baseOwner.name}}</a
+    <ion-item
+      *ngIf="baseOwner !== undefined"
+      [routerLink]="['/profile', baseOwner.id]"
     >
+      <ion-label>{{baseOwner.name}}</ion-label>
+    </ion-item>
   </div>
 
   <div *ngIf="investments">
