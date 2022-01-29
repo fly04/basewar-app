@@ -15,7 +15,7 @@ export class GeolocationService {
     try {
       coordinates = await Geolocation.getCurrentPosition({
         timeout: 10000,
-        enableHighAccuracy: true,
+        enableHighAccuracy: false,
       });
     } catch (error) {
       console.log('Error occurred', error);

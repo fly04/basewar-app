@@ -2,11 +2,14 @@
   <ion-toolbar>
     <ng-content select="[title]"></ng-content>
     <ion-label slot="end">
-      Money:
-      {{ this.userStats?.money }}
-      <br />
-      Income:
-      {{ this.userStats?.income }}
+      <ion-icon name="diamond-outline"></ion-icon>
+      <div>
+        <span>{{ this.userStats?.money }}</span>
+        <span class="income">
+          <span *ngIf="this.userStats?.income == undefined">0</span
+          >{{ this.userStats?.income }}/s
+        </span>
+      </div>
     </ion-label>
   </ion-toolbar>
 </ion-header>

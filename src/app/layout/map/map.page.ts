@@ -43,6 +43,7 @@ export class MapPage implements OnInit {
   lastLng: number;
   lastSeenBase: Base;
   actualUser: User;
+  positionAlert: boolean = false;
 
   constructor(
     readonly basesService: BasesService,
@@ -139,6 +140,7 @@ export class MapPage implements OnInit {
 
     // Place la caméra à la position initiale du joueur lorsqu'il ouvre l'app
     this.geolocService.getCurrentPosition().then((position) => {
+      this.handlePositionPermissions(position);
       map.setView(
         latLng(position.coords.latitude, position.coords.longitude),
         16
@@ -148,6 +150,7 @@ export class MapPage implements OnInit {
     // Chaque seconde la position du userMarker est actualisée
     setInterval(() => {
       this.geolocService.getCurrentPosition().then((position) => {
+        this.handlePositionPermissions(position);
         this.lastLat = position.coords.latitude;
         this.lastLng = position.coords.longitude;
 
@@ -197,6 +200,7 @@ export class MapPage implements OnInit {
 
   centerMap() {
     this.geolocService.getCurrentPosition().then((position) => {
+      this.handlePositionPermissions(position);
       this.map.setView(
         latLng(position.coords.latitude, position.coords.longitude),
         16
@@ -479,4 +483,17 @@ export class MapPage implements OnInit {
       await alert.present();
     });
   };
+
+  async handlePositionPermissions(position) {
+    if (position === undefined && this.positionAlert === false) {
+      const alert = await this.alertController.create({
+        header: 'Impossible de récupérer votre position',
+        message:
+          'Veuillez autoriser Basewar à accéder à votre position pour pouvoir jouer.',
+        buttons: [{ text: 'Compris!' }],
+      });
+      await alert.present();
+      this.positionAlert = true;
+    }
+  }
 }
