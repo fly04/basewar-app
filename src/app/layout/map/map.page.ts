@@ -11,11 +11,12 @@ import { WsMessagesService } from 'src/app/services/websocket/ws-messages.servic
 import { GeolocationService } from 'src/app/services/geolocation.service';
 import { Base } from 'src/app/models/base';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ReplaySubject, forkJoin } from 'rxjs';
+import { ReplaySubject, forkJoin, combineLatest } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
 import { User } from 'src/app/models/user';
 import { InvestmentToCreate } from 'src/app/models/investment-to-create';
 import { BaseToCreate } from 'src/app/models/base-to-create';
+import { BaseUpdate } from 'src/app/models/base-update';
 
 @Component({
   selector: 'app-map',
@@ -29,8 +30,13 @@ export class MapPage implements OnInit {
   basesMarkers: Marker[] = []; //Contient les markers à afficher sur la carte où se trouvent les bases
   basesCircles: Circle[] = []; //Contient les cercles à afficher sur la carte autour des bases
   markers: any[]; //Contient à terme tous les markers (cercles et markers)
-  basesToDisplay: Base[];
+
+  basesToDisplay: Base[]; //Toutes les bases de la BDD
+  activeBases: BaseUpdate[]; //Bases actives provenant du msg WS
+
   refreshMap = new ReplaySubject();
+  createMarkers = new ReplaySubject();
+
   userIsInBase: boolean;
   lastLat: number;
   lastLng: number;
@@ -43,7 +49,6 @@ export class MapPage implements OnInit {
     readonly wsMessagesService: WsMessagesService,
     readonly geolocService: GeolocationService,
     private router: Router,
-    private route: ActivatedRoute,
     private zone: NgZone,
     private alertController: AlertController,
     private auth: AuthService
@@ -97,6 +102,31 @@ export class MapPage implements OnInit {
     this.auth.getUser$().subscribe((user) => {
       this.actualUser = user;
     });
+
+    // Get all the bases
+    this.getAllBasesData();
+
+    // Get the active bases
+    this.getActiveBasesData();
+
+    this.createMarkers.subscribe(() => {
+      this.basesMarkers = [];
+      this.basesCircles = [];
+      this.basesToDisplay.forEach((base) => {
+        let isActive = false;
+        let userCount;
+        this.activeBases.forEach((activeBase) => {
+          if (base.id === activeBase.id) {
+            isActive = true;
+            userCount = activeBase.activeUsers.length;
+          }
+        });
+        //Ajouter des markers pour chaque base
+        this.addMarker(isActive, base, userCount);
+      });
+      //Met à jour la carte
+      this.refreshMap.next();
+    });
   }
 
   onMapReady(map: Map) {
@@ -127,45 +157,23 @@ export class MapPage implements OnInit {
   }
 
   ionViewDidEnter() {
-    //Récupèrer toutes les bases de la bdd via l'API
+    //If showBaseService.property == true { show base }
+  }
+
+  getAllBasesData() {
     this.basesService.getBases().subscribe((bases) => {
       this.basesToDisplay = bases;
+    });
+  }
 
-      //Si un id est spécifié, centrer la carte dessus // REFAIRE AVEC UN SERVICE
-      if (this.route.snapshot.paramMap.get('id') !== null) {
-        let baseToShow = this.basesToDisplay.find(
-          (base) => base.id == this.route.snapshot.paramMap.get('id')
-        );
-        if (baseToShow != null) {
-          this.map.setView(
-            latLng(
-              baseToShow.location.coordinates[0],
-              baseToShow.location.coordinates[1]
-            ),
-            16
-          );
-        }
+  getActiveBasesData() {
+    this.wsMessagesService.updateBases$.subscribe((activeBases) => {
+      if (JSON.stringify(this.activeBases) != JSON.stringify(activeBases)) {
+        //Un autre joueur a créé un base
+        this.getAllBasesData();
       }
-
-      //Récupèrer toutes les bases actives via WS
-      this.wsMessagesService.updateBases$.subscribe((activeBases) => {
-        this.basesMarkers = [];
-        this.basesCircles = [];
-        this.basesToDisplay.forEach((base) => {
-          let isActive = false;
-          let userCount;
-          activeBases.forEach((activeBase) => {
-            if (base.id === activeBase.id) {
-              isActive = true;
-              userCount = activeBase.activeUsers.length;
-            }
-          });
-
-          //Ajouter des markers pour chaque base
-          this.addMarker(isActive, base, userCount);
-        });
-        this.refreshMap.next();
-      });
+      this.activeBases = activeBases;
+      this.createMarkers.next();
     });
   }
 
@@ -302,9 +310,6 @@ export class MapPage implements OnInit {
       }
 
       //Create investment
-      //   console.log(this.lastSeenBase.id);
-      //   console.log(user.id);
-
       let investmentToCreate: InvestmentToCreate = {
         baseId: this.lastSeenBase.id,
         investorId: user.id,
@@ -355,7 +360,7 @@ export class MapPage implements OnInit {
       this.usersService.getUser(this.actualUser.id),
       this.basesService.getBases(),
     ]).subscribe(async (res) => {
-      console.log(res);
+      //   console.log(res);
 
       let alertMessages: string[] = [];
       let userCanCreateBase: boolean = true;
