@@ -28,9 +28,5 @@ export class AppHeaderComponent {
         income: userStats.income,
       };
     });
-
-    setInterval(() => {
-      console.log(this.userStats.income);
-    }, 1000);
   }
 }
