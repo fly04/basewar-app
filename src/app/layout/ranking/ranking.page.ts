@@ -27,14 +27,13 @@ export class RankingPage implements OnInit {
 
   ionViewDidEnter() {
     this.usersService.getUsers().subscribe((users) => {
-      this.usersToDisplay = users.map((user, index) => {
-        return {
-          id: user.id,
-          rank: index + 1,
-          name: user.name,
-          money: user.money,
-        };
-      });
+      console.log(this.usersToDisplay);
+      this.usersToDisplay = users.map((user, index) => ({
+        id: user.id,
+        rank: index + 1,
+        name: user.name,
+        money: user.money,
+      }));
     });
   }
 }

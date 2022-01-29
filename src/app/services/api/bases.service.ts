@@ -30,8 +30,6 @@ export class BasesService {
     return this.http
       .get<Base[]>(`${URL}?ownerId=${user.id}`)
       .pipe(catchError((err) => of([])));
-    // ERROR HANDLER A IMPLEMENTER
-    // .pipe(catchError(this.handleError('patchUserName')));
   }
 
   postBase(baseToCreate: BaseToCreate): Observable<Base> {

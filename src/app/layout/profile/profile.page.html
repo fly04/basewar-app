@@ -15,7 +15,16 @@
   </ion-header>
 
   <div *ngIf="user">
-    <form (submit)="updateUserName(user)">
+    <div *ngIf="user.status">
+      <ion-item color="danger" *ngIf="user.status === 404">
+        Utilisateur introuvable
+      </ion-item>
+      <ion-item color="danger" *ngIf="user.status !== 404">
+        {{ user.message }}
+      </ion-item>
+    </div>
+
+    <form *ngIf="user.status === undefined" (submit)="updateUserName(user)">
       <ion-toolbar>
         <ion-input
           type="text"
@@ -41,7 +50,7 @@
     </form>
   </div>
 
-  <div *ngIf="bases">
+  <div *ngIf="bases && user.status === undefined">
     <h2>Bases</h2>
     <ion-list *ngFor="let base of bases">
       <ion-item [routerLink]="['/base', base.id]">
