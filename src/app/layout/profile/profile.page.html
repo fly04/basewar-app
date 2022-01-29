@@ -3,17 +3,6 @@
 </app-header>
 
 <ion-content>
-  <ion-header>
-    <ion-toolbar>
-      <!-- Logout button -->
-      <ion-buttons slot="end">
-        <ion-button (click)="logOut()">
-          <ion-icon name="log-out"></ion-icon>
-        </ion-button>
-      </ion-buttons>
-    </ion-toolbar>
-  </ion-header>
-
   <div class="ion-padding" *ngIf="user">
     <form (submit)="updateUserName(user)">
       <ion-toolbar>
@@ -32,6 +21,9 @@
           </ion-button>
           <ion-button type="submit" *ngIf="editionMode">
             <ion-icon name="checkmark-outline"></ion-icon>
+          </ion-button>
+          <ion-button (click)="logOut()">
+            <ion-icon name="log-out"></ion-icon>
           </ion-button>
           <ion-button (click)="deleteUser(user)" type="submit">
             <ion-icon name="trash"></ion-icon>

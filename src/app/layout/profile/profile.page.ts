@@ -35,10 +35,6 @@ export class ProfilePage implements OnInit {
     this.userId = this.route.snapshot.paramMap.get('id');
   }
 
-  notify() {
-    // this.localNotifService.showLocalNotification();
-  }
-
   ngOnInit() {
     // Get the actual logged user
     this.auth.getUser$().subscribe((user) => {

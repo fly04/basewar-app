@@ -13,7 +13,10 @@ export class GeolocationService {
   public getCurrentPosition = async () => {
     let coordinates;
     try {
-      coordinates = await Geolocation.getCurrentPosition();
+      coordinates = await Geolocation.getCurrentPosition({
+        timeout: 10000,
+        enableHighAccuracy: true,
+      });
     } catch (error) {
       console.log('Error occurred', error);
     }
