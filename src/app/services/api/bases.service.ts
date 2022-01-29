@@ -26,10 +26,10 @@ export class BasesService {
     return this.http.get<Base[]>(URL);
   }
 
-  getUserBases(user: User): Observable<Base[]> {
-    return this.http.get<Base[]>(`${URL}?ownerId=${user.id}`);
-    // ERROR HANDLER A IMPLEMENTER
-    // .pipe(catchError(this.handleError('patchUserName')));
+  getUserBases(user: User): Observable<any> {
+    return this.http
+      .get<Base[]>(`${URL}?ownerId=${user.id}`)
+      .pipe(catchError((err) => of([])));
   }
 
   postBase(baseToCreate: BaseToCreate): Observable<Base> {
@@ -56,5 +56,10 @@ export class BasesService {
     return this.http.patch(url, { name: newBaseName });
     // ERROR HANDLER A IMPLEMENTER
     // .pipe(catchError(this.handleError('patchUserName')));
+  }
+
+  deleteBase(id: string): Observable<Base> {
+    const url = `${URL}/${id}`;
+    return this.http.delete<Base>(url);
   }
 }

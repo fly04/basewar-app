@@ -2,7 +2,7 @@
   <ion-title title> Détail de la base </ion-title>
 </app-header>
 
-<ion-content>
+<ion-content class="ion-padding">
   <div *ngIf="actualBase">
     <form (submit)="updateBaseName(actualBase)">
       <ion-input
@@ -13,12 +13,26 @@
         required
         disabled="{{ !editionMode }}"
       ></ion-input>
-      <div *ngIf="actualBase.owner.id === actualUser.id" class="edit">
-        <ion-button *ngIf="!editionMode" (click)="editionMode = true">
-          Renommer
-        </ion-button>
-        <ion-button type="submit" *ngIf="editionMode">Confirmer</ion-button>
-      </div>
+
+      <ion-toolbar>
+        <ion-buttons slot="end">
+          <ion-button [routerLink]="['/map', this.actualBaseId]">
+            <ion-icon name="navigate-circle-outline"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+
+        <ion-buttons *ngIf="actualBase.owner.id === actualUser.id" slot="end">
+          <ion-button *ngIf="!editionMode" (click)="editionMode = true">
+            <ion-icon name="pencil"></ion-icon>
+          </ion-button>
+          <ion-button type="submit" *ngIf="editionMode">
+            <ion-icon name="checkmark-outline"></ion-icon>
+          </ion-button>
+          <ion-button (click)="deleteBase(user)" type="submit">
+            <ion-icon name="trash"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
     </form>
   </div>
 
@@ -37,9 +51,9 @@
   <div *ngIf="investments">
     <h2>Investisseurs</h2>
     <div *ngFor="let investment of investments">
-      <a [routerLink]="['/profile', investment.investor.id]">
-        {{ investment.investor.name }}
-      </a>
+      <ion-item [routerLink]="['/profile', investment.investor.id]">
+        <ion-label>{{ investment.investor.name }}</ion-label>
+      </ion-item>
     </div>
   </div>
 </ion-content>

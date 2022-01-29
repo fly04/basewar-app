@@ -30,14 +30,12 @@ export class RankingPage implements OnInit {
       users = users.sort((a, b) =>
         a.money < b.money ? 1 : b.money < a.money ? -1 : 0
       );
-      this.usersToDisplay = users.map((user, index) => {
-        return {
-          id: user.id,
-          rank: index + 1,
-          name: user.name,
-          money: user.money,
-        };
-      });
+      this.usersToDisplay = users.map((user, index) => ({
+        id: user.id,
+        rank: index + 1,
+        name: user.name,
+        money: user.money,
+      }));
     });
   }
 }

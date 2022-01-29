@@ -15,14 +15,12 @@ export class UsersService {
   constructor(public http: HttpClient) {}
 
   getUsers(): Observable<User[]> {
-    return this.http.get<User[]>(URL);
-    // .pipe(catchError(this.handleError));
+    return this.http.get<User[]>(URL).pipe(catchError((err) => of([err])));
   }
 
   getUser(id: string): Observable<User> {
     const url = `${URL}/${id}`;
-    return this.http.get<User>(url);
-    // .pipe(catchError(this.handleError));
+    return this.http.get<User>(url).pipe(catchError((err) => of(err)));
   }
 
   postUser(user: UserRegister): Observable<User> {

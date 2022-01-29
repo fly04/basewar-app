@@ -1,10 +1,30 @@
 <app-header>
-  <ion-title title> Mon profil </ion-title>
+  <ion-title title> Profil </ion-title>
 </app-header>
 
-<ion-content>
-  <div class="ion-padding" *ngIf="user">
-    <form (submit)="updateUserName(user)">
+<ion-content class="ion-padding">
+  <ion-header>
+    <ion-toolbar>
+      <!-- Logout button -->
+      <ion-buttons slot="end">
+        <ion-button (click)="logOut()">
+          <ion-icon name="log-out"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+
+  <div *ngIf="user">
+    <div *ngIf="user.status">
+      <ion-item color="danger" *ngIf="user.status === 404">
+        Utilisateur introuvable
+      </ion-item>
+      <ion-item color="danger" *ngIf="user.status !== 404">
+        {{ user.message }}
+      </ion-item>
+    </div>
+
+    <form *ngIf="user.status === undefined" (submit)="updateUserName(user)">
       <ion-toolbar>
         <ion-input
           type="text"
@@ -33,11 +53,13 @@
     </form>
   </div>
 
-  <div class="ion-padding" *ngIf="bases">
+  <div *ngIf="bases && user.status === undefined">
     <h2>Bases</h2>
-    <div *ngFor="let base of bases">
-      <a [routerLink]="['/base', base.id]">{{ base.name }}</a>
-    </div>
+    <ion-list *ngFor="let base of bases">
+      <ion-item [routerLink]="['/base', base.id]">
+        <ion-label> {{ base.name }} </ion-label>
+      </ion-item>
+    </ion-list>
     <div *ngIf="bases.length === 0">
       <p>Aucune base pour le moment</p>
     </div>
