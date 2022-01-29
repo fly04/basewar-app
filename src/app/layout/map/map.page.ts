@@ -9,8 +9,9 @@ import { BasesService } from 'src/app/services/api/bases.service';
 import { UsersService } from 'src/app/services/api/users.service';
 import { WsMessagesService } from 'src/app/services/websocket/ws-messages.service';
 import { GeolocationService } from 'src/app/services/geolocation.service';
+import { ShowBaseService } from 'src/app/services/show-base.service';
 import { Base } from 'src/app/models/base';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { ReplaySubject, forkJoin, combineLatest } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
 import { User } from 'src/app/models/user';
@@ -48,6 +49,7 @@ export class MapPage implements OnInit {
     readonly usersService: UsersService,
     readonly wsMessagesService: WsMessagesService,
     readonly geolocService: GeolocationService,
+    private showBaseService: ShowBaseService,
     private router: Router,
     private zone: NgZone,
     private alertController: AlertController,
@@ -110,6 +112,8 @@ export class MapPage implements OnInit {
     this.getActiveBasesData();
 
     this.createMarkers.subscribe(() => {
+      if (this.basesToDisplay === undefined || this.activeBases === undefined)
+        return;
       this.basesMarkers = [];
       this.basesCircles = [];
       this.basesToDisplay.forEach((base) => {
@@ -157,7 +161,21 @@ export class MapPage implements OnInit {
   }
 
   ionViewDidEnter() {
-    //If showBaseService.property == true { show base }
+    if (this.showBaseService.baseId !== null) {
+      this.basesService.getBases().subscribe((bases) => {
+        let baseToShow = bases.find(
+          (b) => b.id === this.showBaseService.baseId
+        );
+        this.map.setView(
+          latLng(
+            baseToShow.location.coordinates[0],
+            baseToShow.location.coordinates[1]
+          ),
+          16
+        );
+        this.showBaseService.isShown();
+      });
+    }
   }
 
   getAllBasesData() {

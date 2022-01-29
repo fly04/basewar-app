@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Base } from 'src/app/models/base';
 import { BasesService } from 'src/app/services/api/bases.service';
+import { ShowBaseService } from 'src/app/services/show-base.service';
 import { AuthService } from 'src/app/auth/auth.service';
 import { Investment } from 'src/app/models/investment';
 import { User } from 'src/app/models/user';
@@ -23,7 +24,8 @@ export class BasePage implements OnInit {
     private auth: AuthService,
     private route: ActivatedRoute,
     private router: Router,
-    private basesService: BasesService
+    private basesService: BasesService,
+    private showBaseService: ShowBaseService
   ) {
     this.actualBaseId = this.route.snapshot.paramMap.get('id');
   }
@@ -52,5 +54,10 @@ export class BasePage implements OnInit {
       .subscribe((investment) => {
         this.investments = investment;
       });
+  }
+
+  showOnMap() {
+    this.showBaseService.setBaseId(this.actualBaseId);
+    this.router.navigate(['/map']);
   }
 }
