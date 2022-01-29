@@ -50,26 +50,6 @@ export class BasePage implements OnInit {
     this.basesService.patchBaseName(base.id, base.name).subscribe();
   }
 
-  async deleteBase(base: Base) {
-    const alert = await this.alertController.create({
-      header: 'Supprimer la base',
-      message: 'Voulez-vous vraiment supprimer cette base ?',
-      buttons: [
-        { text: 'Oui', role: 'true' },
-        { text: 'Non', role: 'false' },
-      ],
-    });
-
-    await alert.present();
-    const result = await alert.onDidDismiss();
-
-    if (result.role === 'true') {
-      this.basesService
-        .deleteBase(base.id)
-        .subscribe(() => this.router.navigate(['/map']));
-    }
-  }
-
   ionViewDidEnter() {
     this.basesService.getBase(this.actualBaseId).subscribe((base) => {
       this.actualBase = base;
